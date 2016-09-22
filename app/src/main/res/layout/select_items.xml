@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.mheev.helpthemshop.viewmodel.ItemSelectionViewModel" />
+
+        <import type="android.view.View" />
+
+    </data>
+
+
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            >
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                />
+
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/search_add_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
+
+                <EditText
+                    android:id="@+id/edit_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/hint_search_or_add"
+                    android:onTextChanged="@{(s, start, before, count) -> viewModel.onTextChanged(s)}"
+                    android:visibility="@{viewModel.isLoadingItems? View.GONE:View.VISIBLE}"
+                    android:text="@={viewModel.searchText}"
+                    />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                >
+
+                <com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar
+                    android:id="@+id/progressBar"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:cropToPadding="false"
+                    android:visibility="@{viewModel.isLoadingItems? View.VISIBLE:View.GONE}"
+                    app:mlpb_progress_color="#566da9"
+                    app:mlpb_progress_stoke_width="3dp" />
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/my_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/search_add_layout"
+                android:clipToPadding="false"
+                android:scrollbars="vertical"
+                app:displayItems="@{viewModel.displayItems}"
+                tools:listitem="@layout/shopping_item" />
+
+
+        </RelativeLayout>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|bottom"
+            android:layout_marginBottom="70dp"
+            android:layout_marginRight="@dimen/md_keylines"
+            android:onClick="@{(v)->viewModel.onAddButton(v)}"
+            android:src="@drawable/ic_add_white_24dp"
+            android:transitionName="@string/transition_avatar"
+            android:visibility="@{viewModel.isLoadingItems? View.GONE:View.VISIBLE}"
+            app:backgroundTint="@color/colorAccent"
+            app:borderWidth="0dp"
+            app:elevation="6dp"
+            app:pressedTranslationZ="12dp" />
+
+
+    </android.support.design.widget.CoordinatorLayout>
+
+
+</layout>

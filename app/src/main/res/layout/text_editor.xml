@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+            name="hint_text"
+            type="java.lang.String" />
+
+        <variable
+            name="text_color"
+            type="int" />
+
+        <variable
+            name="text_size"
+            type="java.lang.Float" />
+    </data>
+
+    <merge>
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/item_note_layout1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/different_content_padding"
+            android:textColorHint="@color/colorPrimaryDark"
+            android:theme="@style/EditTextContentTheme"
+            app:hintTextAppearance="@style/ItemDetailsHintApperance"
+            >
+
+            <EditText
+                android:id="@+id/item_note1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="@dimen/edittext_min_width"
+                android:hint="@{hint_text}"
+                android:textColor="@{text_color}"
+                android:singleLine="true"
+                android:textSize="@{text_size}"
+                android:textAppearance="@style/ItemDetailsValueApperance"
+                />
+
+        </android.support.design.widget.TextInputLayout>
+    </merge>
+</layout>
