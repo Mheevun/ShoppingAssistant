@@ -4,8 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 
-import com.mheev.helpthemshop.repository.ShoppingItemRepository;
-import com.mheev.helpthemshop.model.ShoppingItem;
+import com.mheev.helpthemshop.model.ShoppingItemRepository;
+import com.mheev.helpthemshop.model.pojo.ShoppingItem;
 import com.mheev.helpthemshop.viewmodel.ItemDetailsViewModel;
 
 import javax.inject.Inject;

@@ -41,7 +41,7 @@
     <dimen name="different_content_padding">10dp</dimen>
     <dimen name="same_content_padding">5dp</dimen>
     <dimen name="text_clickable_width">30dp</dimen>
-    <dimen name="text_space">1dp</dimen>
+    <dimen name="text_space">5dp</dimen>
     <dimen name="edittext_min_width">100dp</dimen>
 
 

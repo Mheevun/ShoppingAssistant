@@ -1,4 +1,4 @@
-package com.mheev.helpthemshop.model;
+package com.mheev.helpthemshop.model.api;
 
 /**
  * Created by mheev on 9/21/2016.
@@ -9,6 +9,7 @@ import java.util.List;
 import javax.annotation.Generated;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.mheev.helpthemshop.model.pojo.ShoppingItem;
 
 @Generated("org.jsonschema2pojo")
 public class ApiQueryResponse {

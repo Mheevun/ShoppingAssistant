@@ -1,10 +1,11 @@
 package com.mheev.helpthemshop.activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.view.View;
 
-import com.mheev.helpthemshop.model.ShoppingItem;
+import com.mheev.helpthemshop.model.pojo.ShoppingItem;
 
 /**
  * Created by mheev on 9/15/2016.
@@ -21,6 +22,11 @@ public class BaseFragment extends Fragment {
 
         @Override
         public void toItemDetailsActivity(ShoppingItem item, View transitionView) {
+
+        }
+
+        @Override
+        public void toItemDetailsActivity(ShoppingItem item, View transitionView, Activity listenerResultActivity) {
 
         }
 

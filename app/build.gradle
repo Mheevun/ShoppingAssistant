@@ -94,5 +94,9 @@ dependencies {
     //https://github.com/lsjwzh/MaterialLoadingProgressBar
     compile('com.lsjwzh:materialloadingprogressbar:0.5.8-RELEASE')
 
+    //event bus https://github.com/greenrobot/EventBus
+    compile 'org.greenrobot:eventbus:3.0.0'
+
+
 }
 

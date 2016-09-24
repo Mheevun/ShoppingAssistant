@@ -1,11 +1,12 @@
 package com.mheev.helpthemshop.api.retrofit;
 
-import com.mheev.helpthemshop.model.ApiCreateResponse;
-import com.mheev.helpthemshop.model.ApiEditResponse;
-import com.mheev.helpthemshop.model.ApiQueryResponse;
-import com.mheev.helpthemshop.model.ShoppingItem;
+import com.mheev.helpthemshop.model.api.ApiCreateResponse;
+import com.mheev.helpthemshop.model.api.ApiEditResponse;
+import com.mheev.helpthemshop.model.api.ApiQueryResponse;
+import com.mheev.helpthemshop.model.pojo.ShoppingItem;
 
-import retrofit2.Response;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
@@ -31,7 +32,7 @@ public interface ShoppingItemClient {
     Observable<ApiEditResponse> editItem(@Path("id")String itemId, @Body ShoppingItem item);
 
     @DELETE("shop_item/{id}")
-    Observable<Response> deleteItem(@Path("id")String itemId);
+    Observable<ResponseBody> deleteItem(@Path("id")String itemId);
 
 
 }

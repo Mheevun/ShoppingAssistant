@@ -24,10 +24,10 @@ import com.codetroopers.betterpickers.numberpicker.NumberPickerDialogFragment;
 import com.mheev.helpthemshop.BR;
 import com.mheev.helpthemshop.R;
 import com.mheev.helpthemshop.activity.ItemDetailsDialogView;
-import com.mheev.helpthemshop.model.Price;
-import com.mheev.helpthemshop.model.Quantity;
-import com.mheev.helpthemshop.model.SavedCurrency;
-import com.mheev.helpthemshop.model.ShoppingItem;
+import com.mheev.helpthemshop.model.pojo.Price;
+import com.mheev.helpthemshop.model.pojo.Quantity;
+import com.mheev.helpthemshop.model.pojo.SavedCurrency;
+import com.mheev.helpthemshop.model.pojo.ShoppingItem;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;

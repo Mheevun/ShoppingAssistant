@@ -1,17 +1,15 @@
-package com.mheev.helpthemshop.model;
-
-import android.os.Parcel;
-import android.os.Parcelable;
+package com.mheev.helpthemshop.model.pojo;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Created by mheev on 9/11/2016.
  */
-public class ShoppingItem{
+public class ShoppingItem {
     private String itemName;
     private String itemDescription;
 
@@ -27,20 +25,13 @@ public class ShoppingItem{
     private String itemAvatarURL;
     private String itemWallpaperURL;
     private boolean favorite;
-    private boolean isSync;
-    private boolean isNew;
+
+    private Date test;
 
     public ShoppingItem() {
 
     }
 
-    public boolean isSync() {
-        return isSync;
-    }
-
-    public void setSync(boolean sync) {
-        isSync = sync;
-    }
 
     public ShoppingItem(String itemName){
         itemName = itemName.substring(0, 1).toUpperCase() + itemName.substring(1);
@@ -52,13 +43,6 @@ public class ShoppingItem{
         this.quantity = quantity;
     }
 
-    public boolean isNew() {
-        return isNew;
-    }
-
-    public void setNew(boolean aNew) {
-        isNew = aNew;
-    }
 
     public boolean isFavorite() {
         return favorite;
@@ -132,5 +116,10 @@ public class ShoppingItem{
         this.quantity = quantity;
     }
 
-
+    public boolean isNew(){
+        if(id==null)
+            return true;
+        else
+            return false;
+    }
 }

@@ -1,6 +1,6 @@
 package com.mheev.helpthemshop.di.component;
 
-import com.mheev.helpthemshop.activity.ItemSelectionFragment;
+import com.mheev.helpthemshop.activity.ItemManagmentFragment;
 import com.mheev.helpthemshop.api.api_service.ItemRequestManager;
 import com.mheev.helpthemshop.api.retrofit.ShoppingItemClient;
 import com.mheev.helpthemshop.di.module.AppModule;
@@ -21,5 +21,5 @@ public interface NetComponent {
     ItemRequestManager requestManager();
     ShoppingItemClient client();
 
-    void inject(ItemSelectionFragment itemSelectionFragment);
+    void inject(ItemManagmentFragment itemManagmentFragment);
 }

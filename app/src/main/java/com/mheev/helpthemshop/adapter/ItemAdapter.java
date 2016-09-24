@@ -1,30 +1,28 @@
 package com.mheev.helpthemshop.adapter;
 
-import android.app.Activity;
-import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.databinding.ObservableArrayList;
-import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.util.Pair;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
-import com.chauthai.swipereveallayout.ViewBinderHelper;
 import com.mheev.helpthemshop.R;
+import com.mheev.helpthemshop.activity.ItemManagmentListener;
 import com.mheev.helpthemshop.databinding.ShoppingItemBinding;
-import com.mheev.helpthemshop.model.ShoppingItem;
+import com.mheev.helpthemshop.model.pojo.ShoppingItem;
 import com.mheev.helpthemshop.viewmodel.ItemViewModel;
+
+import java.util.List;
 
 /**
  * Created by mheev on 9/12/2016.
  */
 public class ItemAdapter extends RecyclerView.Adapter<ShoppingViewHodler>{
-    public ObservableArrayList<ShoppingItem> items = new ObservableArrayList<>();
+    public ObservableArrayList<ShoppingItem> items = new ObservableArrayList<ShoppingItem>();
+    private ItemManagmentListener listener;
 
-    public ItemAdapter(ObservableArrayList<ShoppingItem> items){
-        this.items = items;
+    public ItemAdapter(ItemManagmentListener listener){
+        this.listener = listener;
     }
 
     @Override
@@ -44,7 +42,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ShoppingViewHodler>{
         ShoppingItemBinding binding = holder.getBinding();
         ShoppingItem item = items.get(position);
 
-        binding.setVm(new ItemViewModel(item));
+        binding.setVm(new ItemViewModel(item, listener));
         binding.executePendingBindings();
     }
 
@@ -57,15 +55,33 @@ public class ItemAdapter extends RecyclerView.Adapter<ShoppingViewHodler>{
     }
 
 
-//    public void removeItem(int position){
-//        items.remove(position); //int position = list.indexOf(data)
-//        notifyItemRemoved(position);
-//        notifyItemRangeChanged(position,items.size());
-//    }
-//
-//    public void addItem(ShoppingItem item){
-//        items.add(item);
-//        notifyItemInserted(items.size());
-//    }
+    public String removeItem(int position){
+        ShoppingItem item = items.remove(position); //int position = list.indexOf(data)
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position,items.size());
+        return item.getId();
+    }
 
+    public void setItem(List<ShoppingItem> items){
+        this.items.clear();
+        this.items.addAll(items);
+        notifyDataSetChanged();
+   }
+    public ShoppingItem get(int position){
+        return items.get(position);
+    }
+
+    public void clear() {
+        items.clear();
+        notifyDataSetChanged();
+    }
+
+    public void add(ShoppingItem item) {
+        items.add(item);
+        notifyItemInserted(items.size());
+    }
+
+    public boolean isEmpty() {
+        return items.isEmpty();
+    }
 }

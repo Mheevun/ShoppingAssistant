@@ -4,16 +4,18 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.BaseObservable;
+import android.databinding.ObservableBoolean;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
 import android.view.View;
 
 import com.mheev.helpthemshop.R;
-import com.mheev.helpthemshop.repository.ShoppingItemRepository;
+import com.mheev.helpthemshop.activity.ItemManagmentListener;
+import com.mheev.helpthemshop.model.ShoppingItemRepository;
 import com.mheev.helpthemshop.activity.ItemDetailsActivity;
-import com.mheev.helpthemshop.model.Quantity;
-import com.mheev.helpthemshop.model.ShoppingItem;
+import com.mheev.helpthemshop.model.pojo.Quantity;
+import com.mheev.helpthemshop.model.pojo.ShoppingItem;
 
 import javax.inject.Inject;
 
@@ -31,9 +33,12 @@ public class ItemViewModel extends BaseObservable{
 
     private Class<?> detailsActivity = ItemDetailsActivity.class;
 
+    public ObservableBoolean isSync = new ObservableBoolean();
+    private ItemManagmentListener listener;
 
-    public ItemViewModel(ShoppingItem item){
+    public ItemViewModel(ShoppingItem item, ItemManagmentListener listener){
         this.item = item;
+        this.listener = listener;
 //        App.getItemComponent().inject(this);
     }
 
@@ -47,19 +52,19 @@ public class ItemViewModel extends BaseObservable{
     }
 
     public void onItemClick(View view){
-//        repo.addItem(item);
-        Intent intent = ItemDetailsActivity.getStartIntent(view.getContext(),item);
-        ActivityOptionsCompat transitionOption = getDetailTransitionOption(view);
-        ActivityCompat.startActivity((Activity) view.getContext(), intent,transitionOption.toBundle());
+        listener.onEditItemDetails(item);
+//        Intent intent = ItemDetailsActivity.getStartIntent(view.getContext(),item);
+//        ActivityOptionsCompat transitionOption = getDetailTransitionOption(view);
+//        ActivityCompat.startActivity((Activity) view.getContext(), intent,transitionOption.toBundle());
     }
 
-    private ActivityOptionsCompat getDetailTransitionOption(View view){
-        Context context = view.getContext();
-        return ActivityOptionsCompat.makeSceneTransitionAnimation(
-                (Activity) view.getContext(),
-                new Pair<View, String>(view.findViewById(R.id.avatar),context.getString(R.string.transition_avatar))
-//                new Pair<View, String>(view.findViewById(R.id.item_name),context.getString(R.string.transition_name))
-        );
-    }
+//    private ActivityOptionsCompat getDetailTransitionOption(View view){
+//        Context context = view.getContext();
+//        return ActivityOptionsCompat.makeSceneTransitionAnimation(
+//                (Activity) view.getContext(),
+//                new Pair<View, String>(view.findViewById(R.id.avatar),context.getString(R.string.transition_avatar))
+////                new Pair<View, String>(view.findViewById(R.id.item_name),context.getString(R.string.transition_name))
+//        );
+//    }
 
 }

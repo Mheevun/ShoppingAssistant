@@ -17,13 +17,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mheev.helpthemshop.R;
-import com.mheev.helpthemshop.repository.ShoppingItemRepository;
+import com.mheev.helpthemshop.model.eventbus.EditItemEvent;
+import com.mheev.helpthemshop.model.eventbus.EditItemEventResult;
 import com.mheev.helpthemshop.databinding.ItemDetailsV2Binding;
-import com.mheev.helpthemshop.model.ShoppingItem;
+import com.mheev.helpthemshop.model.pojo.ShoppingItem;
 import com.mheev.helpthemshop.util.ImagePicker;
 import com.mheev.helpthemshop.viewmodel.ItemDetailsViewModel;
 
-import javax.inject.Inject;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
@@ -34,6 +36,7 @@ import permissions.dispatcher.RuntimePermissions;
 @RuntimePermissions
 public class ItemDetailsActivity extends AppCompatActivity
         implements AppBarLayout.OnOffsetChangedListener, ItemDetailsDialogView {
+    private static final String TAG = ItemDetailsActivity.class.getSimpleName();
     private static final float PERCENTAGE_TO_SHOW_TITLE_AT_TOOLBAR = 0.9f;
     private static final float PERCENTAGE_TO_HIDE_TITLE_DETAILS = 0.3f;
     private static final int ALPHA_ANIMATIONS_DURATION = 200;
@@ -46,12 +49,13 @@ public class ItemDetailsActivity extends AppCompatActivity
     private AppBarLayout mAppBarLayout;
     private Toolbar mToolbar;
 
-    @Inject
-    ShoppingItemRepository itemRepo;
+//    @Inject
+//    ShoppingItemRepository itemRepo;
 
     public static final String ID = "ID";
     private ItemDetailsV2Binding binding;
     private ItemDetailsViewModel viewModel;
+    private ShoppingItem item;
 
     public ItemDetailsActivity() {
 
@@ -59,8 +63,9 @@ public class ItemDetailsActivity extends AppCompatActivity
 
     public static Intent getStartIntent(Context context, ShoppingItem item) {
         Intent intent = new Intent(context, ItemDetailsActivity.class);
-        intent.putExtra(ID, item.getId());
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        intent.putExtra(ID, item.getId());
+//        intent.putExtra(ID, item);
+//        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         return intent;
     }
 
@@ -68,15 +73,18 @@ public class ItemDetailsActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("ItemDetailsActivity", "Hello");
-        ItemSelectionFragment.getNetNavigatorComponent().inject(this);
+        EventBus.getDefault().register(this);
+//        ItemManagmentFragment.getNetNavigatorComponent().inject(this);
+
+        Log.d(TAG, "onCreate()");
+        ItemManagmentFragment.getNetNavigatorComponent().inject(this);
 
         int layout = R.layout.item_details_v2;
         setContentView(layout);
         binding = DataBindingUtil.setContentView(this, layout);
 
         bindActivity();
-        initViewModel();
+//        initViewModel();
 
     }
 
@@ -91,24 +99,36 @@ public class ItemDetailsActivity extends AppCompatActivity
 
 
         startAlphaAnimation(mTitle, 0, View.INVISIBLE);
-
-    }
-
-    private void initViewModel() {
-        ItemSelectionFragment.getNetNavigatorComponent().inject(this);
-        ShoppingItem item = itemRepo.getItem(getIntent().getStringExtra(ID));
-        if(item==null) {
-            item = new ShoppingItem();
-            item.setNew(true);
-        }
+        Log.d(TAG, "onCreate item:"+item);
         viewModel = new ItemDetailsViewModel(this, item);
         binding.setViewModel(viewModel);
     }
 
+
+    @Subscribe(sticky = true)
+    public void onReciveEditEvent(EditItemEvent event) {
+//        ShoppingItem item = itemRepo.getItem(getIntent().getStringExtra(ID));
+//        if(item==null) {
+//            item = new ShoppingItem();
+//            item.setNew(true);
+//        }
+//        Log.d(TAG, "recive intent: " + getIntent().getSerializableExtra(ID));
+//        item = (ShoppingItem) getIntent().getSerializableExtra(ID);
+        Log.d(TAG, "recieve item: " + event.getItem());
+        item = event.getItem();
+    }
+
     @Override
-    protected void onPause() {
-        super.onPause();
-        itemRepo.addItem(viewModel.getItem());
+    protected void onDestroy() {
+
+//        itemRepo.addNewItem(viewModel.getItem());
+//        Intent returnIntent = getIntent();
+//        returnIntent.putExtra(ID, item);
+//        setResult(RESULT_OK,returnIntent);
+//        finish();
+        EventBus.getDefault().post(new EditItemEventResult(item));
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
     }
 
     @Override

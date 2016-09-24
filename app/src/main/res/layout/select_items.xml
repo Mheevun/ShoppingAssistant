@@ -7,7 +7,7 @@
 
         <variable
             name="viewModel"
-            type="com.mheev.helpthemshop.viewmodel.ItemSelectionViewModel" />
+            type="com.mheev.helpthemshop.viewmodel.ItemManagmentViewModel" />
 
         <import type="android.view.View" />
 
@@ -75,7 +75,7 @@
                 android:layout_below="@+id/search_add_layout"
                 android:clipToPadding="false"
                 android:scrollbars="vertical"
-                app:displayItems="@{viewModel.displayItems}"
+                app:adapter="@{viewModel.itemAdapter}"
                 tools:listitem="@layout/shopping_item" />
 
 

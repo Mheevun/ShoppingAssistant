@@ -19,13 +19,13 @@ import android.view.WindowManager;
 import com.mheev.helpthemshop.R;
 import com.mheev.helpthemshop.databinding.ActivityMainBinding;
 import com.mheev.helpthemshop.di.module.NavigatorModule;
-import com.mheev.helpthemshop.model.ShoppingItem;
+import com.mheev.helpthemshop.model.pojo.ShoppingItem;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements ActivityNavigator {
-    private ItemSelectionFragment selectionFragment;
+    private ItemManagmentFragment selectionFragment;
     private BuyingFragment buyingFragment;
     private ActivityMainBinding binding;
     private static NavigatorModule navigatorModule;
@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements ActivityNavigator
 
 
     private void setupViewPager(ViewPager viewPager) {
-        selectionFragment = new ItemSelectionFragment();
+        selectionFragment = new ItemManagmentFragment();
         buyingFragment = new BuyingFragment();
 
         StateFragmentAdapter adapter = new StateFragmentAdapter(getSupportFragmentManager());
@@ -80,6 +80,17 @@ public class MainActivity extends AppCompatActivity implements ActivityNavigator
             ActivityCompat.startActivity(this, intent, transitionOption.toBundle());
         } else {
             ActivityCompat.startActivity(this, intent, ActivityOptionsCompat.makeBasic().toBundle());
+        }
+    }
+
+    @Override
+    public void toItemDetailsActivity(ShoppingItem item, View transitionView, Activity listenerResultActivity) {
+        Intent intent = ItemDetailsActivity.getStartIntent(this, item);
+        ActivityOptionsCompat transitionOption = getDetailTransitionOption(transitionView);
+        if (transitionOption == null) {
+            listenerResultActivity.startActivity(intent, transitionOption.toBundle());
+        } else {
+            listenerResultActivity.startActivity(intent, ActivityOptionsCompat.makeBasic().toBundle());
         }
     }
 

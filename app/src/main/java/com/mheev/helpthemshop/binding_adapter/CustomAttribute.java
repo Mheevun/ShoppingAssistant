@@ -1,31 +1,25 @@
 package com.mheev.helpthemshop.binding_adapter;
 
-import android.content.res.ColorStateList;
 import android.databinding.BindingAdapter;
 import android.databinding.BindingConversion;
 import android.databinding.ObservableArrayList;
 import android.support.annotation.ColorRes;
-import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
-import android.util.Log;
-import android.widget.EditText;
 
 import com.mheev.helpthemshop.R;
 import com.mheev.helpthemshop.adapter.ItemAdapter;
-import com.mheev.helpthemshop.model.ShoppingItem;
+import com.mheev.helpthemshop.model.pojo.ShoppingItem;
 
 /**
  * Created by mheev on 9/14/2016.
  */
 public class CustomAttribute {
-    @BindingAdapter("displayItems")
-    public static void bindList(RecyclerView view, ObservableArrayList<ShoppingItem> list) {
+    @BindingAdapter("adapter")
+    public static void bindList(RecyclerView view, RecyclerView.Adapter adapter) {
         LinearLayoutManager layoutManager = new LinearLayoutManager(view.getContext());
-//        GridLayoutManager layoutManager = new GridLayoutManager(view.getContext(),2);
         view.setLayoutManager(layoutManager);
-        view.setAdapter(new ItemAdapter(list));
+        view.setAdapter(adapter);
     }
 
     @BindingConversion
