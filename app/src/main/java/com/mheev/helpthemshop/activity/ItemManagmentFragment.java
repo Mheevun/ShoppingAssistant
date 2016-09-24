@@ -1,5 +1,6 @@
 package com.mheev.helpthemshop.activity;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -15,7 +16,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.mheev.helpthemshop.App;
@@ -25,43 +25,57 @@ import com.mheev.helpthemshop.databinding.SelectItemsBinding;
 import com.mheev.helpthemshop.di.component.DaggerNetNavigatorItemComponent;
 import com.mheev.helpthemshop.di.component.NetNavigatorItemComponent;
 import com.mheev.helpthemshop.di.module.ItemModule;
-import com.mheev.helpthemshop.model.ShoppingItem;
-import com.mheev.helpthemshop.repository.ShoppingItemRepository;
-import com.mheev.helpthemshop.viewmodel.ItemSelectionViewModel;
+import com.mheev.helpthemshop.model.eventbus.EditItemEvent;
+import com.mheev.helpthemshop.model.eventbus.EditItemEventResult;
+import com.mheev.helpthemshop.model.api.ApiCreateResponse;
+import com.mheev.helpthemshop.model.api.ApiEditResponse;
+import com.mheev.helpthemshop.model.pojo.ShoppingItem;
+import com.mheev.helpthemshop.model.ShoppingItemRepository;
+import com.mheev.helpthemshop.viewmodel.ItemManagmentViewModel;
 import com.philosophicalhacker.lib.RxLoader;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 import rx.Observer;
+import rx.Subscription;
+import rx.functions.Action1;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by mheev on 9/13/2016.
  */
-public class ItemSelectionFragment extends BaseFragment {
-    private final String TAG = "ItemSelectionFragment";
+public class ItemManagmentFragment extends BaseFragment implements ItemManagmentListener {
+    private final String TAG = "ItemManagmentFragment";
 
     @Inject
     ItemRequestManager requestManager;
 
     private static NetNavigatorItemComponent netNavigatorItemComponent;
-    private  SelectItemsBinding binding;
+    private SelectItemsBinding binding;
 
-    private ItemSelectionViewModel viewModel;
+    private ItemManagmentViewModel viewModel;
+
+    private CompositeSubscription subscriptions = new CompositeSubscription();
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.d(TAG,"onCreated()");
-
+        Log.d(TAG, "onCreated()");
+        EventBus.getDefault().register(this);
 
 //        MainActivity.getNavigationComponent().inject(this);
         App.getNetComponent().inject(this);
 
         binding = DataBindingUtil.inflate(inflater, R.layout.select_items, container, false);
         View view = binding.getRoot();
-        viewModel = new ItemSelectionViewModel();
+        viewModel = new ItemManagmentViewModel(this);
         binding.setViewModel(viewModel);
 
         loadItems();
@@ -70,19 +84,67 @@ public class ItemSelectionFragment extends BaseFragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        Log.d(TAG,"syncing items");
-        for(ShoppingItem item:viewModel.displayItems){
-            requestManager.syncItem(item);
-        }
+    public void onEditItemDetails(ShoppingItem item) {
+        Log.d(TAG, "create intent: " + item);
+        Intent intent = new Intent(getContext(), ItemDetailsActivity.class);
+        EventBus.getDefault().postSticky(new EditItemEvent(item));
+        startActivity(intent);
+    }
 
+    @Subscribe
+    public void onRecieveEditEventResult(EditItemEventResult event) {
+        Log.d(TAG, "get item from ItemDetailsActivity: " + event.getItem().getItemName());
+        if(event.getItem().getItemName()==null)return;
+        ShoppingItem item = event.getItem();
+        Subscription updateSubscription;
+        viewModel.updateItem(item);
+            Log.d(TAG, "item id: "+item.getId());
+            if(item.isNew()) {
+                Log.d(TAG, "perform create item request"+item.getItemName());
+                updateSubscription = requestManager.createItem(item).subscribe(new Action1<ApiCreateResponse>() {
+                    @Override
+                    public void call(ApiCreateResponse apiCreateResponse) {
+                        Log.d(TAG, "create item response details: "+apiCreateResponse.getObjectId());
+                        item.setId(apiCreateResponse.getObjectId());
+                        requestManager.getItem(item.getId()).subscribe(new Action1<ShoppingItem>() {
+                            @Override
+                            public void call(ShoppingItem shoppingItem) {
+                                viewModel.updateItem(item);
+                            }
+                        });
+                    }
+                });
+            }
+            else {
+                Log.d(TAG, "perform update item request: "+item.getItemName());
+                updateSubscription = requestManager.updateItem(item).subscribe(new Action1<ApiEditResponse>() {
+                    @Override
+                    public void call(ApiEditResponse apiEditResponse) {
+                        Log.d(TAG, "update item response details: "+apiEditResponse.getUpdatedAt());
+                        requestManager.getItem(item.getId()).subscribe(new Action1<ShoppingItem>() {
+                            @Override
+                            public void call(ShoppingItem shoppingItem) {
+                                viewModel.updateItem(shoppingItem);
+                            }
+                        });
+
+                    }
+                });
+            }
+        subscriptions.add(updateSubscription);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+        subscriptions.unsubscribe();
     }
 
     private void loadItems() {
-        Log.d(TAG,"load item");
+        Log.d(TAG, "load item");
         viewModel.isLoadingItems.set(true);
-        requestManager.loadItemList().compose(RxLoader.from((AppCompatActivity) getActivity()))
+        Subscription loadSubscription = requestManager.loadItemList().compose(RxLoader.from((AppCompatActivity) getActivity()))
                 .subscribe(new Observer<List<ShoppingItem>>() {
                     @Override
                     public void onCompleted() {
@@ -100,11 +162,13 @@ public class ItemSelectionFragment extends BaseFragment {
                         loadIntoRepository(shoppingItemList);
                     }
                 });
+        subscriptions.add(loadSubscription);
     }
-    private void loadIntoRepository(List<ShoppingItem> shoppingItemList){
+
+    private void loadIntoRepository(List<ShoppingItem> shoppingItemList) {
         ShoppingItemRepository repository = new ShoppingItemRepository(shoppingItemList);
 
-        if(netNavigatorItemComponent==null){
+        if (netNavigatorItemComponent == null) {
             ItemModule itemModule = new ItemModule(repository);
             netNavigatorItemComponent = DaggerNetNavigatorItemComponent.builder()
                     .netComponent(App.getNetComponent())
@@ -113,19 +177,18 @@ public class ItemSelectionFragment extends BaseFragment {
                     .build();
         }
         viewModel.isLoadingItems.set(false);
-        viewModel.initData(repository, MainActivity.getNavigatorModule().provideNavigator());
+        viewModel.initData(repository);
         initItemTouch(binding.myRecyclerView);
     }
 
-    public static NetNavigatorItemComponent getNetNavigatorComponent(){
+    public static NetNavigatorItemComponent getNetNavigatorComponent() {
         return netNavigatorItemComponent;
     }
 
 
-
     private void initItemTouch(final RecyclerView recyclerView) {
 
-        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT|ItemTouchHelper.LEFT) {
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
                 return false;
@@ -138,7 +201,16 @@ public class ItemSelectionFragment extends BaseFragment {
                 if (direction == ItemTouchHelper.RIGHT) {
                     ShoppingItem item = viewModel.moveItemToActivePlan(position);
                     mCallback.toBuyingFragment(item);
+                }else {
+                    String id = viewModel.removeItem(position);
+                    subscriptions.add(requestManager.removeItem(id).subscribe(new Action1<ResponseBody>() {
+                        @Override
+                        public void call(ResponseBody response) {
+
+                        }
+                    }));
                 }
+
             }
 
             @Override
@@ -158,7 +230,14 @@ public class ItemSelectionFragment extends BaseFragment {
                         icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_edit_white);
                         RectF icon_dest = new RectF((float) itemView.getLeft() + width, (float) itemView.getTop() + width, (float) itemView.getLeft() + 2 * width, (float) itemView.getBottom() - width);
                         c.drawBitmap(icon, null, icon_dest, p);
-
+                    }
+                    else {
+                        p.setColor(Color.parseColor("#D32F2F"));
+                        RectF background = new RectF((float) itemView.getRight() + dX, (float) itemView.getTop(),(float) itemView.getRight(), (float) itemView.getBottom());
+                        c.drawRect(background,p);
+                        icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_delete_white);
+                        RectF icon_dest = new RectF((float) itemView.getRight() - 2*width ,(float) itemView.getTop() + width,(float) itemView.getRight() - width,(float)itemView.getBottom() - width);
+                        c.drawBitmap(icon,null,icon_dest,p);
                     }
                 }
                 super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
