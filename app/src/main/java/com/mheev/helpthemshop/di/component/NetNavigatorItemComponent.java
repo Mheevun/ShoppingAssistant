@@ -3,7 +3,6 @@ package com.mheev.helpthemshop.di.component;
 import com.mheev.helpthemshop.activity.ItemDetailsActivity;
 import com.mheev.helpthemshop.activity.ItemManagmentFragment;
 import com.mheev.helpthemshop.di.module.ItemModule;
-import com.mheev.helpthemshop.di.module.NavigatorModule;
 import com.mheev.helpthemshop.util.ItemScope;
 
 import dagger.Component;
@@ -13,8 +12,7 @@ import dagger.Component;
  */
 
 @ItemScope
-@Component(dependencies = NetComponent.class, modules = {NavigatorModule.class, ItemModule.class})
+@Component(dependencies = NetComponent.class, modules = {ItemModule.class})
 public interface NetNavigatorItemComponent {
     void inject(ItemDetailsActivity itemDetailsActivity);
-    void inject(ItemManagmentFragment itemManagment);
 }

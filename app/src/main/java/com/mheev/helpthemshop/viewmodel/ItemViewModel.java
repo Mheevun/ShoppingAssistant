@@ -1,17 +1,10 @@
 package com.mheev.helpthemshop.viewmodel;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
 import android.databinding.BaseObservable;
 import android.databinding.ObservableBoolean;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.util.Pair;
 import android.view.View;
 
-import com.mheev.helpthemshop.R;
-import com.mheev.helpthemshop.activity.ItemManagmentListener;
+import com.mheev.helpthemshop.activity.OnEditItemListener;
 import com.mheev.helpthemshop.model.ShoppingItemRepository;
 import com.mheev.helpthemshop.activity.ItemDetailsActivity;
 import com.mheev.helpthemshop.model.pojo.Quantity;
@@ -34,9 +27,9 @@ public class ItemViewModel extends BaseObservable{
     private Class<?> detailsActivity = ItemDetailsActivity.class;
 
     public ObservableBoolean isSync = new ObservableBoolean();
-    private ItemManagmentListener listener;
+    private OnEditItemListener listener;
 
-    public ItemViewModel(ShoppingItem item, ItemManagmentListener listener){
+    public ItemViewModel(ShoppingItem item, OnEditItemListener listener){
         this.item = item;
         this.listener = listener;
 //        App.getItemComponent().inject(this);

@@ -15,10 +15,6 @@ public class ShoppingItemRepository {
     private ObservableArrayList<ShoppingItem> items  = new ObservableArrayList<ShoppingItem>();
     private static final String TAG = "ShoppingItemRepository";
 
-    public ShoppingItemRepository(ObservableArrayList<ShoppingItem> items) {
-        this.items = items;
-    }
-
     public ShoppingItemRepository(List<ShoppingItem> items) {
         this.items.addAll(items);
     }

@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-
+            app:adapter="@{viewModel.itemAdapter}"
             android:scrollbars="vertical" />
         <!--app:displayItems = "@{viewModel.displayItems}"-->
 

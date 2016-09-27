@@ -1,21 +1,46 @@
 package com.mheev.helpthemshop.viewmodel;
 
-import android.databinding.ObservableArrayList;
+import android.util.Log;
 
+import com.mheev.helpthemshop.activity.OnEditItemListener;
+import com.mheev.helpthemshop.adapter.ItemAdapter;
+import com.mheev.helpthemshop.db.UserItemDbHelper;
 import com.mheev.helpthemshop.model.pojo.ShoppingItem;
 
 /**
  * Created by mheev on 9/13/2016.
  */
-public class BuyingViewModel {
+public class BuyingViewModel{
+    private UserItemDbHelper dbHelper;
+    private static final String TAG = "BuyingViewModel";
+    public ItemAdapter itemAdapter;
 
-    public ObservableArrayList<ShoppingItem> displayItems = new ObservableArrayList<>();
 
-    public void addBuyingItem(ShoppingItem item) {
-        displayItems.add(item);
+    public BuyingViewModel(OnEditItemListener listener, UserItemDbHelper dbHelper){
+        this.dbHelper = dbHelper;
+
+        itemAdapter = new ItemAdapter(listener);
+        initData();
+
     }
 
-    public void removeBuyingItem(int position) {
-        displayItems.remove(position);
+    public void initData() {
+        Log.d(TAG, "bind repository and display items");
+        itemAdapter.setItem(dbHelper.getItems());
     }
+
+    public void addItem(ShoppingItem item) {
+        dbHelper.addItem(item);
+        itemAdapter.setItem(dbHelper.getItems());
+    }
+    public void updateItem(ShoppingItem item){
+        dbHelper.updateItem(item);
+        itemAdapter.setItem(dbHelper.getItems());
+    }
+    public void removeItem(int position){
+        String id = itemAdapter.removeItem(position);
+        dbHelper.removeItem(id);
+    }
+
+
 }

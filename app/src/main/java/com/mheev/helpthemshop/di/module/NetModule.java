@@ -6,6 +6,7 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mheev.helpthemshop.api.api_service.ItemRequestManager;
+import com.mheev.helpthemshop.api.api_service.UserItemRequestManager;
 import com.mheev.helpthemshop.api.retrofit.ShoppingItemClient;
 import com.mheev.helpthemshop.util.ItemScope;
 
@@ -105,6 +106,13 @@ public class NetModule {
     @Singleton
     ItemRequestManager provideRequestManager(ShoppingItemClient client){
         return new ItemRequestManager(client);
+    }
+
+    public static final String DUMMY_ID = "alice";
+    @Provides
+    @Singleton
+    UserItemRequestManager provideUserRequestManager(ShoppingItemClient client){
+        return new UserItemRequestManager(client, DUMMY_ID);
     }
 
 }

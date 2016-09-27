@@ -8,6 +8,14 @@ public class Quantity {
     private String unit;
 
     //TODO: unit to enum
+    public Quantity(String amountStr, String unit) {
+        if(amountStr==null){
+            this.amount = 1;
+        }else
+            this.amount = Integer.parseInt(amountStr);
+
+        this.unit = unit;
+    }
     public Quantity(int amount, String unit) {
         this.amount = amount;
         this.unit = unit;

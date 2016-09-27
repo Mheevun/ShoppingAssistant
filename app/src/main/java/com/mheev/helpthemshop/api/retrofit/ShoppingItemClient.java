@@ -19,20 +19,36 @@ import rx.Observable;
  * Created by mheev on 9/19/2016.
  */
 public interface ShoppingItemClient {
-    @GET("shop_item")
+    @GET(ApiUtil.APP_PATH)
     Observable<ApiQueryResponse> getItemList();
 
-    @POST("shop_item")
+    @POST(ApiUtil.APP_PATH)
     Observable<ApiCreateResponse> createItem(@Body ShoppingItem item);
 
-    @GET("shop_item/{id}")
+    @GET(ApiUtil.APP_PATH+"/{id}")
     Observable<ShoppingItem> getItem(@Path("id")String itemId);
 
-    @PUT("shop_item/{id}")
+    @PUT(ApiUtil.APP_PATH+"/{id}")
     Observable<ApiEditResponse> editItem(@Path("id")String itemId, @Body ShoppingItem item);
 
-    @DELETE("shop_item/{id}")
+    @DELETE(ApiUtil.APP_PATH+"/{id}")
     Observable<ResponseBody> deleteItem(@Path("id")String itemId);
+
+    /***********user**************/
+    @GET(ApiUtil.APP_PATH+"/user/{uid}/item")
+    Observable<ApiQueryResponse> getUserItemList(@Path("uid")String userId);
+
+    @POST(ApiUtil.APP_PATH+"/user/{uid}/item")
+    Observable<ApiCreateResponse> createUserItem(@Path("uid") String userId, @Body ShoppingItem item);
+
+    @GET(ApiUtil.APP_PATH+"/user/{uid}/item/{iid}")
+    Observable<ShoppingItem> getUserItem(@Path("id")String userId, @Path("iid") String itemId);
+
+    @PUT(ApiUtil.APP_PATH+"/user/{uid}/item/{iid}")
+    Observable<ApiEditResponse> editUserItem(@Path("id")String userId, @Path("iid") String itemId, @Body ShoppingItem item);
+
+    @DELETE(ApiUtil.APP_PATH+"/user/{uid}/item/{iid}")
+    Observable<ResponseBody> deleteUserItem(@Path("id")String userId, @Path("iid") String itemId);
 
 
 }

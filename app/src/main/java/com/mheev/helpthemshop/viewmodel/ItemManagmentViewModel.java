@@ -1,63 +1,34 @@
 package com.mheev.helpthemshop.viewmodel;
 
-import android.databinding.BaseObservable;
-import android.databinding.ObservableArrayList;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 
-import com.mheev.helpthemshop.activity.ItemManagmentListener;
-import com.mheev.helpthemshop.adapter.ItemAdapter;
-import com.mheev.helpthemshop.model.ShoppingItemRepository;
-import com.mheev.helpthemshop.activity.ActivityNavigator;
+import com.mheev.helpthemshop.activity.OnEditItemListener;
 import com.mheev.helpthemshop.model.pojo.ShoppingItem;
 
 import java.util.List;
-
-import rx.Observable;
 
 
 /**
  * Created by mheev on 9/14/2016.
  */
-public class ItemManagmentViewModel extends BaseObservable {
+public class ItemManagmentViewModel extends BasedViewModel {
     private String TAG = "ItemManagmentViewModel";
     public ObservableField<String> searchText = new ObservableField<String>();
     public ObservableBoolean isLoadingItems = new ObservableBoolean(false);
-    public ItemAdapter itemAdapter;
 
-    private ItemManagmentListener listener;
-    private ShoppingItemRepository itemRepository;
-
-    public ItemManagmentViewModel(ItemManagmentListener listener) {
+    private OnEditItemListener listener;
+    public ItemManagmentViewModel(OnEditItemListener listener) {
+        super(listener);
         this.listener = listener;
-        itemAdapter = new ItemAdapter(listener);
-    }
-
-    public void initData(ShoppingItemRepository itemRepository) {
-        Log.d(TAG, "bind repository and display items");
-        this.itemRepository = itemRepository;
-        itemAdapter.setItem(itemRepository.getItems());
-    }
-
-    public void updateItem(ShoppingItem item) {
-        itemRepository.addItem(item);
-        itemAdapter.setItem(itemRepository.getItems());
-    }
-    public String removeItem(int position){
-        Log.d(TAG,"remove item: "+position);
-        return itemAdapter.removeItem(position);
     }
 
     public ShoppingItem moveItemToActivePlan(int position) {
         ShoppingItem targetItem = itemAdapter.get(position);
-
-        //clear searchText
-        searchText.set("");
-        Log.d(TAG, "clear text");
-
+        removeItem(position);
         return targetItem;
     }
 

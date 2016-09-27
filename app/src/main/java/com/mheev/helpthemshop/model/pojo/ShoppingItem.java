@@ -22,6 +22,23 @@ public class ShoppingItem {
     private Quantity quantity;
     private Price price;
     private String author;
+
+    public String getItemAvatarURL() {
+        return itemAvatarURL;
+    }
+
+    public void setItemAvatarURL(String itemAvatarURL) {
+        this.itemAvatarURL = itemAvatarURL;
+    }
+
+    public String getItemWallpaperURL() {
+        return itemWallpaperURL;
+    }
+
+    public void setItemWallpaperURL(String itemWallpaperURL) {
+        this.itemWallpaperURL = itemWallpaperURL;
+    }
+
     private String itemAvatarURL;
     private String itemWallpaperURL;
     private boolean favorite;
@@ -31,6 +48,7 @@ public class ShoppingItem {
     public ShoppingItem() {
 
     }
+
 
 
     public ShoppingItem(String itemName){

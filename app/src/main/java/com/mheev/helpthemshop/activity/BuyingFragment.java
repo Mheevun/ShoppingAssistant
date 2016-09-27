@@ -1,7 +1,7 @@
 package com.mheev.helpthemshop.activity;
 
 
-import android.content.Context;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -20,21 +20,38 @@ import android.view.ViewGroup;
 
 import com.mheev.helpthemshop.App;
 import com.mheev.helpthemshop.R;
+import com.mheev.helpthemshop.api.api_service.UserItemRequestManager;
 import com.mheev.helpthemshop.databinding.BuyingItemsBinding;
+import com.mheev.helpthemshop.db.UserItemDbHelper;
+import com.mheev.helpthemshop.model.eventbus.EditItemEvent;
+import com.mheev.helpthemshop.model.eventbus.ItemSelectedEvent;
+import com.mheev.helpthemshop.model.pojo.ShoppingItem;
 import com.mheev.helpthemshop.viewmodel.BuyingViewModel;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
 /**
  * Created by mheev on 9/15/2016.
  */
-public class BuyingFragment extends Fragment {
+public class BuyingFragment extends Fragment implements OnEditItemListener {
 
+    @Inject
+    UserItemRequestManager userRequestManager;
     private BuyingViewModel viewModel;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        viewModel = new BuyingViewModel();
+        App.getNetComponent().inject(this);
+        EventBus.getDefault().register(this);
+
+//        setRequestManager(userRequestManager);
+
+        viewModel = new BuyingViewModel(this, new UserItemDbHelper(this.getContext()));
         BuyingItemsBinding binding = DataBindingUtil.inflate(inflater, R.layout.buying_items, container, false);
         View view = binding.getRoot();
         binding.setViewModel(viewModel);
@@ -43,14 +60,30 @@ public class BuyingFragment extends Fragment {
         return view;
     }
 
-    public BuyingViewModel getViewModel(){
-        return viewModel;
+
+
+    @Subscribe
+    public void onRecieveSelectedItem(ItemSelectedEvent event){
+        viewModel.addItem(event.getItem());
     }
 
+    @Override
+    public void onEditItemDetails(ShoppingItem item) {
+        Log.d(getTag(), "create intent: " + item);
+        Intent intent = new Intent(getContext(), ItemDetailsActivity.class);
+        EventBus.getDefault().postSticky(new EditItemEvent(item));
+        startActivity(intent);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
 
     private void initItemTouch(final RecyclerView recyclerView) {
 
-        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT|ItemTouchHelper.RIGHT) {
+        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
                 return false;
@@ -61,9 +94,7 @@ public class BuyingFragment extends Fragment {
                 int position = viewHolder.getAdapterPosition();
 
                 if (direction == ItemTouchHelper.LEFT) {
-                    viewModel.removeBuyingItem(position);
-                }else{
-                    Log.d("sss","edit");
+                    viewModel.removeItem(position);
                 }
             }
 

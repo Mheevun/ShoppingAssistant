@@ -6,18 +6,9 @@ import com.mheev.helpthemshop.model.pojo.ShoppingItem;
  * Created by mheev on 9/23/2016.
  */
 
-public class EditItemEventResult {
-    private ShoppingItem item;
+public class EditItemEventResult extends ItemEvent{
 
     public EditItemEventResult(ShoppingItem item) {
-        this.item = item;
-    }
-
-    public ShoppingItem getItem() {
-        return item;
-    }
-
-    public void setItem(ShoppingItem item) {
-        this.item = item;
+        super(item);
     }
 }

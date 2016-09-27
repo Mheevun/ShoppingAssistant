@@ -7,6 +7,24 @@ public class Price {
     private int value;
     private String currency;
 
+    public Price(){
+
+    }
+
+    public Price(String valueStr, String unit) {
+        if(valueStr==null){
+            this.value = 0;
+        }else
+            this.value = Integer.parseInt(valueStr);
+
+        this.currency = unit;
+    }
+
+    public Price(int value, String currency) {
+        this.value = value;
+        this.currency = currency;
+    }
+
     public int getValue() {
         return value;
     }

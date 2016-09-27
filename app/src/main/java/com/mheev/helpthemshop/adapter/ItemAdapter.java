@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.mheev.helpthemshop.R;
-import com.mheev.helpthemshop.activity.ItemManagmentListener;
+import com.mheev.helpthemshop.activity.OnEditItemListener;
 import com.mheev.helpthemshop.databinding.ShoppingItemBinding;
 import com.mheev.helpthemshop.model.pojo.ShoppingItem;
 import com.mheev.helpthemshop.viewmodel.ItemViewModel;
@@ -19,9 +19,9 @@ import java.util.List;
  */
 public class ItemAdapter extends RecyclerView.Adapter<ShoppingViewHodler>{
     public ObservableArrayList<ShoppingItem> items = new ObservableArrayList<ShoppingItem>();
-    private ItemManagmentListener listener;
+    private OnEditItemListener listener;
 
-    public ItemAdapter(ItemManagmentListener listener){
+    public ItemAdapter(OnEditItemListener listener){
         this.listener = listener;
     }
 
