@@ -18,7 +18,6 @@ import android.widget.TextView;
 
 import com.mheev.helpthemshop.R;
 import com.mheev.helpthemshop.model.eventbus.EditItemEvent;
-import com.mheev.helpthemshop.model.eventbus.EditItemEventResult;
 import com.mheev.helpthemshop.databinding.ItemDetailsV2Binding;
 import com.mheev.helpthemshop.model.pojo.ShoppingItem;
 import com.mheev.helpthemshop.util.ImagePicker;
@@ -85,7 +84,6 @@ public class ItemDetailsActivity extends AppCompatActivity
 
         bindActivity();
 //        initViewModel();
-
     }
 
     private void bindActivity() {
@@ -104,31 +102,19 @@ public class ItemDetailsActivity extends AppCompatActivity
         binding.setViewModel(viewModel);
     }
 
-
+    private EditItemEvent event;
     @Subscribe(sticky = true)
     public void onReciveEditEvent(EditItemEvent event) {
-//        ShoppingItem item = itemRepo.getItem(getIntent().getStringExtra(ID));
-//        if(item==null) {
-//            item = new ShoppingItem();
-//            item.setNew(true);
-//        }
-//        Log.d(TAG, "recive intent: " + getIntent().getSerializableExtra(ID));
-//        item = (ShoppingItem) getIntent().getSerializableExtra(ID);
+        this.event = event;
         Log.d(TAG, "recieve item: " + event.getItem());
         item = event.getItem();
     }
 
     @Override
     protected void onDestroy() {
-
-//        itemRepo.addNewItem(viewModel.getItem());
-//        Intent returnIntent = getIntent();
-//        returnIntent.putExtra(ID, item);
-//        setResult(RESULT_OK,returnIntent);
-//        finish();
-        EventBus.getDefault().post(new EditItemEventResult(item));
-        EventBus.getDefault().unregister(this);
         super.onDestroy();
+        EventBus.getDefault().unregister(this);
+        event.onEditItemCallback(item);
     }
 
     @Override
@@ -193,10 +179,10 @@ public class ItemDetailsActivity extends AppCompatActivity
 
     private ImageView imageView;
 
-    @NeedsPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+    @NeedsPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
     public void showAvatarPickerAfterPermission(final ImageView imgView) {
         this.imageView = imgView;
-        ImagePicker.pickImage(this, "Select picture", imgView);
+        ImagePicker.pickImage(this, "Select picture");
     }
 
     @Override

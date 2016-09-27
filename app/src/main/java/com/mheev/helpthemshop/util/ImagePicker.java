@@ -15,6 +15,7 @@ import android.widget.ImageView;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +36,46 @@ public class ImagePicker {
 
 
 
+    /**
+     * Launch a dialog to pick an image from camera/gallery apps.
+     *
+     * @param activity     which will launch the dialog.
+     * @param chooserTitle will appear on the picker dialog.
+     */
+    public static void pickImage(Activity activity, String chooserTitle) {
+        Intent chooseImageIntent = getPickImageIntent(activity, chooserTitle);
+        activity.startActivityForResult(chooseImageIntent, PICK_IMAGE_ID);
+    }
+
+    /**
+     * Get an Intent which will launch a dialog to pick an image from camera/gallery apps.
+     *
+     * @param context      context.
+     * @param chooserTitle will appear on the picker dialog.
+     * @return intent launcher.
+     */
+    public static Intent getPickImageIntent(Context context, String chooserTitle) {
+        Intent chooserIntent = null;
+        List<Intent> intentList = new ArrayList<>();
+
+        Intent pickIntent = new Intent(Intent.ACTION_PICK,
+                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        Intent takePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        takePhotoIntent.putExtra("return-data", true);
+        takePhotoIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(getTemporalFile(context)));
+        intentList = addIntentsToList(context, intentList, pickIntent);
+        intentList = addIntentsToList(context, intentList, takePhotoIntent);
+
+        if (intentList.size() > 0) {
+            chooserIntent = Intent.createChooser(intentList.remove(intentList.size() - 1),
+                    chooserTitle);
+            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS,
+                    intentList.toArray(new Parcelable[intentList.size()]));
+        }
+
+        return chooserIntent;
+    }
+
     public static void pickImage(Activity activity, String chooserTitle, ImageView imgView) {
         Intent chooseImageIntent = getPickImageIntent(activity, chooserTitle, imgView);
         activity.startActivityForResult(chooseImageIntent, 234);
@@ -42,21 +83,21 @@ public class ImagePicker {
 
     public static Intent getPickImageIntent(Context context, String chooserTitle, ImageView imgView) {
         Intent chooserIntent = null;
-        ArrayList intentList = new ArrayList();
+        List intentList = new ArrayList();
         Intent pickIntent = new Intent("android.intent.action.PICK", MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         Intent takePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
-        if(imgView.getId()!=-1){
+        if(imgView.getId()!= -1){
             pickIntent.putExtra(IMG_VIEW_ID, imgView.getId());
             takePhotoIntent.putExtra(IMG_VIEW_ID, imgView.getId());
         }
         Log.d(TAG, "getPickImageIntent: "+ pickIntent.getIntExtra(IMG_VIEW_ID,-1));
 
-        List intentList1 = addIntentsToList(context, intentList, pickIntent);
-        intentList1 = addIntentsToList(context, intentList1, takePhotoIntent);
-        if(intentList1.size() > 0) {
-            chooserIntent = Intent.createChooser((Intent)intentList1.remove(intentList1.size() - 1), chooserTitle);
-            chooserIntent.putExtra("android.intent.extra.INITIAL_INTENTS", (Parcelable[])intentList1.toArray(new Parcelable[intentList1.size()]));
+        intentList = addIntentsToList(context, intentList, pickIntent);
+        intentList = addIntentsToList(context, intentList, takePhotoIntent);
+        if(intentList.size() > 0) {
+            chooserIntent = Intent.createChooser((Intent)intentList.remove(intentList.size() - 1), chooserTitle);
+            chooserIntent.putExtra("android.intent.extra.INITIAL_INTENTS", (Parcelable[])intentList.toArray(new Parcelable[intentList.size()]));
         }
         Log.d(TAG, pickIntent.getIntExtra(IMG_VIEW_ID,-1)+"");
         Log.d(TAG,"chooserIntent:"+pickIntent.getExtras()+"");
@@ -87,24 +128,32 @@ public class ImagePicker {
             boolean isCamera = (imageReturnedIntent == null
                     || imageReturnedIntent.getData() == null
                     || imageReturnedIntent.getData().toString().contains(imageFile.toString()));
+            Log.d(TAG, "isCamera: "+isCamera);
             if (isCamera) {     /** CAMERA **/
                 selectedImage = Uri.fromFile(imageFile);
             } else {            /** ALBUM **/
                 selectedImage = imageReturnedIntent.getData();
             }
+            Log.i(TAG, "context exist: " + context);
+            Log.i(TAG, "file exist: " + imageFile.exists());
             Log.i(TAG, "selectedImage: " + selectedImage);
-            Log.i(TAG, "result image intent: " + imageReturnedIntent.getExtras());
-            Log.i(TAG, "result image intent: " + imageReturnedIntent.getIntExtra(IMG_VIEW_ID,-1));
+
 
             bm = getImageResized(context, selectedImage);
-//            int rotation = ImageRotator.getRotation(context, selectedImage, isCamera);
-//            bm = ImageRotator.rotate(bm, rotation);
         }
         return bm;
     }
 
     private static File getTemporalFile(Context context) {
         return new File(context.getExternalCacheDir(), TEMP_IMAGE_NAME);
+//        File file = null;
+//        try {
+//            file = File.createTempFile(TEMP_IMAGE_NAME, null, context.getCacheDir());
+//        } catch (IOException e) {
+//            // Error while creating file
+//            e.printStackTrace();
+//        }
+//        return file;
     }
 
     private static Bitmap getImageResized(Context context, Uri selectedImage) {
@@ -129,6 +178,7 @@ public class ImagePicker {
         try {
             fileDescriptor = context.getContentResolver().openAssetFileDescriptor(theUri, "r");
         } catch (FileNotFoundException e) {
+            Log.d(TAG, "uri: "+ theUri);
             e.printStackTrace();
         }
 

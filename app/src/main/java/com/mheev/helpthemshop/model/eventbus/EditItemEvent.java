@@ -1,5 +1,6 @@
 package com.mheev.helpthemshop.model.eventbus;
 
+import com.mheev.helpthemshop.activity.OnEditItemListener;
 import com.mheev.helpthemshop.model.pojo.ShoppingItem;
 
 /**
@@ -7,7 +8,15 @@ import com.mheev.helpthemshop.model.pojo.ShoppingItem;
  */
 
 public class EditItemEvent extends ItemEvent {
-    public EditItemEvent(ShoppingItem item) {
+    private OnEditItemListener listener;
+
+    public EditItemEvent(ShoppingItem item, OnEditItemListener listener) {
         super(item);
+        this.listener = listener;
     }
+
+    public void onEditItemCallback(ShoppingItem item){
+        listener.onEditItemDetailsResult(item);
+    }
+
 }

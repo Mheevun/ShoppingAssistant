@@ -40,8 +40,6 @@ import javax.inject.Inject;
  */
 public class BuyingFragment extends Fragment implements OnEditItemListener {
 
-    @Inject
-    UserItemRequestManager userRequestManager;
     private BuyingViewModel viewModel;
 
     @Override
@@ -61,7 +59,6 @@ public class BuyingFragment extends Fragment implements OnEditItemListener {
     }
 
 
-
     @Subscribe
     public void onRecieveSelectedItem(ItemSelectedEvent event){
         viewModel.addItem(event.getItem());
@@ -71,9 +68,19 @@ public class BuyingFragment extends Fragment implements OnEditItemListener {
     public void onEditItemDetails(ShoppingItem item) {
         Log.d(getTag(), "create intent: " + item);
         Intent intent = new Intent(getContext(), ItemDetailsActivity.class);
-        EventBus.getDefault().postSticky(new EditItemEvent(item));
+        EventBus.getDefault().postSticky(new EditItemEvent(item, this));
         startActivity(intent);
     }
+
+    @Override
+    public void onEditItemDetailsResult(ShoppingItem item) {
+        Log.d(getTag(), "on recieve edit item detail result (id): "+item.getId());
+        if(item.isNew())
+            viewModel.addItem(item);
+        else
+            viewModel.updateItem(item);
+    }
+
 
     @Override
     public void onDestroy() {

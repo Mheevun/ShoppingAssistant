@@ -4,8 +4,8 @@ package com.mheev.helpthemshop.model.pojo;
  * Created by mheev on 9/11/2016.
  */
 public class Quantity {
-    private int amount;
-    private String unit;
+    private int amount = 1;
+    private String unit = "Units";
 
     //TODO: unit to enum
     public Quantity(String amountStr, String unit) {

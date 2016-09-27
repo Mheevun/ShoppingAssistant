@@ -1,5 +1,6 @@
 package com.mheev.helpthemshop.model.eventbus;
 
+import com.mheev.helpthemshop.activity.OnEditItemListener;
 import com.mheev.helpthemshop.model.pojo.ShoppingItem;
 
 /**
@@ -13,6 +14,8 @@ public class ItemEvent {
         this.item = item;
     }
 
+
+
     public ShoppingItem getItem() {
         return item;
     }
@@ -20,5 +23,6 @@ public class ItemEvent {
     public void setItem(ShoppingItem item) {
         this.item = item;
     }
+
 
 }

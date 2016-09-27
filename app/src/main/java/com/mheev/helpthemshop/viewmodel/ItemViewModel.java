@@ -39,6 +39,7 @@ public class ItemViewModel extends BaseObservable{
         String summary = item.getItemName();
         Quantity quantity = item.getQuantity();
         if(quantity!=null){
+            String amount, unit;
             summary = summary + LINE +item.getQuantity().getAmount() + SPACE +  item.getQuantity().getUnit();
         }
         return summary;

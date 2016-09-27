@@ -7,4 +7,6 @@ import com.mheev.helpthemshop.model.pojo.ShoppingItem;
  */
 public interface OnEditItemListener {
     public void onEditItemDetails(ShoppingItem item);
+    public void onEditItemDetailsResult(ShoppingItem item);
+
 }

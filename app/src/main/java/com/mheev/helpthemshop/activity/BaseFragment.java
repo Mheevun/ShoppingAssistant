@@ -1,26 +1,19 @@
 package com.mheev.helpthemshop.activity;
 
-import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.mheev.helpthemshop.api.api_service.RequestManager;
-import com.mheev.helpthemshop.model.api.ApiCreateResponse;
-import com.mheev.helpthemshop.model.api.ApiEditResponse;
-import com.mheev.helpthemshop.model.eventbus.EditItemEvent;
-import com.mheev.helpthemshop.model.eventbus.EditItemEventResult;
 import com.mheev.helpthemshop.model.pojo.ShoppingItem;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
 
 import java.util.List;
 
 import okhttp3.ResponseBody;
 import rx.Observer;
 import rx.Subscription;
-import rx.functions.Action1;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -61,57 +54,6 @@ public abstract class BaseFragment extends Fragment implements OnEditItemListene
                 });
         subscriptions.add(loadSubscription);
     }
-    /*********************EditItemDetail****************/
-    @Override
-    public void onEditItemDetails(ShoppingItem item) {
-        Log.d(TAG, "create intent: " + item);
-        Intent intent = new Intent(getContext(), ItemDetailsActivity.class);
-        EventBus.getDefault().postSticky(new EditItemEvent(item));
-        startActivity(intent);
-    }
-
-    @Subscribe
-    public void onRecieveEditEventResult(EditItemEventResult event) {
-        Log.d(TAG, "get item from ItemDetailsActivity: " + event.getItem().getItemName());
-        if(event.getItem().getItemName()==null)return;
-        ShoppingItem item = event.getItem();
-        Subscription updateSubscription;
-        onItemRecievedFromDetailsActivity(item);
-        Log.d(TAG, "item id: "+item.getId());
-        if(item.isNew()) {
-            Log.d(TAG, "perform create item request"+item.getItemName());
-            updateSubscription = requestManager.createItem(item).subscribe(new Action1<ApiCreateResponse>() {
-                @Override
-                public void call(ApiCreateResponse apiCreateResponse) {
-                    Log.d(TAG, "create item response details: "+apiCreateResponse.getObjectId());
-                    item.setId(apiCreateResponse.getObjectId());
-                    requestManager.getItem(item.getId()).subscribe(new Action1<ShoppingItem>() {
-                        @Override
-                        public void call(ShoppingItem shoppingItem) {
-                            onItemUpdateOnNetwork(shoppingItem);
-                        }
-                    });
-                }
-            });
-        }
-        else {
-            Log.d(TAG, "perform update item request: "+item.getItemName());
-            updateSubscription = requestManager.updateItem(item).subscribe(new Action1<ApiEditResponse>() {
-                @Override
-                public void call(ApiEditResponse apiEditResponse) {
-                    Log.d(TAG, "update item response details: "+apiEditResponse.getUpdatedAt());
-                    requestManager.getItem(item.getId()).subscribe(new Action1<ShoppingItem>() {
-                        @Override
-                        public void call(ShoppingItem shoppingItem) {
-                            onItemCreateOnNetwork(shoppingItem);
-                        }
-                    });
-
-                }
-            });
-        }
-        subscriptions.add(updateSubscription);
-    }
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -120,7 +62,6 @@ public abstract class BaseFragment extends Fragment implements OnEditItemListene
     }
 
     protected abstract void onRecievedItemList(List<ShoppingItem> shoppingItemList);
-    protected abstract void onItemRecievedFromDetailsActivity(ShoppingItem item);
     protected abstract void onItemUpdateOnNetwork(ShoppingItem item);
     protected abstract void onItemCreateOnNetwork(ShoppingItem item);
     protected void onRemoveItem(String itemId){
