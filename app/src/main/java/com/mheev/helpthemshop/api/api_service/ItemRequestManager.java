@@ -52,6 +52,7 @@ public class ItemRequestManager extends RequestManager{
         return getRequester(client.deleteItem(itemId));
     }
 
+
 //    public void syncItem(ShoppingItem item) {
 //        Log.d(TAG, "syncing item");
 //        if (item.getId() == null) {

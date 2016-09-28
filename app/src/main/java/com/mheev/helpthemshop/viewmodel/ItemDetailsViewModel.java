@@ -23,6 +23,7 @@ import com.codetroopers.betterpickers.numberpicker.NumberPickerBuilder;
 import com.codetroopers.betterpickers.numberpicker.NumberPickerDialogFragment;
 import com.mheev.helpthemshop.BR;
 import com.mheev.helpthemshop.R;
+import com.mheev.helpthemshop.activity.ImageLoaderCallback;
 import com.mheev.helpthemshop.activity.ItemDetailsDialogView;
 import com.mheev.helpthemshop.model.pojo.Price;
 import com.mheev.helpthemshop.model.pojo.Quantity;
@@ -36,7 +37,7 @@ import java.math.BigInteger;
 /**
  * Created by mheev on 9/15/2016.
  */
-public class ItemDetailsViewModel extends BaseObservable {
+public class ItemDetailsViewModel extends BaseObservable implements ImageLoaderCallback {
     private ShoppingItem item;
     private String TAG = ItemDetailsViewModel.class.getSimpleName();
 
@@ -123,6 +124,35 @@ public class ItemDetailsViewModel extends BaseObservable {
             return String.valueOf(total);
         }
         return null;
+    }
+
+    @Bindable
+    public String getAvatarUrl(){
+        return item.getItemAvatarURL();
+    }
+    public void setAvatarUrl(String url){
+        item.setItemAvatarURL(url);
+        notifyPropertyChanged(BR.avatarUrl);
+    }
+
+
+    public ImageLoaderCallback getImageLoaderCallback(){
+        return this;
+    }
+
+    @Override
+    public void onImageLoading() {
+        Log.d(TAG, "on image loading");
+    }
+
+    @Override
+    public void onImageReady() {
+        Log.d(TAG, "on image ready");
+    }
+
+    @Override
+    public void onImageLoadError() {
+        Log.d(TAG, "on image loading error");
     }
 
 

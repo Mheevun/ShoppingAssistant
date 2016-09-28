@@ -97,6 +97,7 @@ dependencies {
     //event bus https://github.com/greenrobot/EventBus
     compile 'org.greenrobot:eventbus:3.0.0'
 
-
+    //image loader
+    compile 'com.squareup.picasso:picasso:2.5.2'
 }
 

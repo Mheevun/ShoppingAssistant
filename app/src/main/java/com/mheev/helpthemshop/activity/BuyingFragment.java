@@ -20,7 +20,6 @@ import android.view.ViewGroup;
 
 import com.mheev.helpthemshop.App;
 import com.mheev.helpthemshop.R;
-import com.mheev.helpthemshop.api.api_service.UserItemRequestManager;
 import com.mheev.helpthemshop.databinding.BuyingItemsBinding;
 import com.mheev.helpthemshop.db.UserItemDbHelper;
 import com.mheev.helpthemshop.model.eventbus.EditItemEvent;

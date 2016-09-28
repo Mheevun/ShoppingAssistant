@@ -60,7 +60,8 @@ public class NetModule {
     @Singleton
     OkHttpClient provideOkhttpClient(Cache cache) {
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+        logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
+        logging.setLevel(HttpLoggingInterceptor.Level.HEADERS);
 
         OkHttpClient.Builder client = new OkHttpClient.Builder();
         client.cache(cache);
@@ -70,7 +71,7 @@ public class NetModule {
                 Request original = chain.request();
                 // Request customization: add request headers
                 Request.Builder requestBuilder = original.newBuilder()
-                        .header("Content-Type", "application/json")
+//                        .header("Content-Type", "application/json")
                         .header("X-Parse-Application-Id", "myAppId");
 
                 Request request = requestBuilder.build();
@@ -108,11 +109,12 @@ public class NetModule {
         return new ItemRequestManager(client);
     }
 
-    public static final String DUMMY_ID = "alice";
-    @Provides
-    @Singleton
-    UserItemRequestManager provideUserRequestManager(ShoppingItemClient client){
-        return new UserItemRequestManager(client, DUMMY_ID);
-    }
+
+//    public static final String DUMMY_ID = "alice";
+//    @Provides
+//    @Singleton
+//    UserItemRequestManager provideUserRequestManager(ShoppingItemClient client){
+//        return new UserItemRequestManager(client, DUMMY_ID);
+//    }
 
 }

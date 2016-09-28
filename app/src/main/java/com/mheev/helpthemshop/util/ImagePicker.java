@@ -15,6 +15,7 @@ import android.widget.ImageView;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -117,6 +118,29 @@ public class ImagePicker {
         }
         return list;
     }
+    public static File getFileFromResult(Context context, int requestCode, int resultCode,
+                                         Intent imageReturnedIntent){
+        Log.i(TAG, "getImageFromResult() called with: " + "resultCode = [" + resultCode + "]");
+        File imageFile = null;
+        if (resultCode == Activity.RESULT_OK && requestCode == PICK_IMAGE_ID) {
+            imageFile = getTemporalFile(context);
+            boolean isCamera = (imageReturnedIntent == null
+                    || imageReturnedIntent.getData() == null
+                    || imageReturnedIntent.getData().toString().contains(imageFile.toString()));
+            if (!isCamera) {
+                 /** ALBUM **/
+                Uri imageUri = imageReturnedIntent.getData();
+                imageFile = new File(imageUri.getPath());
+            }
+            Log.i(TAG, "file exist: " + imageFile.exists());
+
+        }
+        return imageFile;
+    }
+
+    public static Bitmap getImageFromFile(Context context, File imageFile){
+        return  getImageResized(context, Uri.fromFile(imageFile));
+    }
 
     public static Bitmap getImageFromResult(Context context, int requestCode, int resultCode,
                                             Intent imageReturnedIntent) {
@@ -144,6 +168,26 @@ public class ImagePicker {
         return bm;
     }
 
+    public static File createFileFromBitmap(Context context, Bitmap bitmap) {
+
+        File newFile = new File(context.getExternalCacheDir(), TEMP_IMAGE_NAME);
+
+        FileOutputStream fileOutputStream = null;
+        try {
+            fileOutputStream = new FileOutputStream(newFile);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream);
+            fileOutputStream.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+        }
+
+        return newFile;
+
+    }
+
     private static File getTemporalFile(Context context) {
         return new File(context.getExternalCacheDir(), TEMP_IMAGE_NAME);
 //        File file = null;
@@ -167,7 +211,8 @@ public class ImagePicker {
                 && (bm.getWidth() < minWidthQuality || bm.getHeight() < minHeightQuality)
                 && i < sampleSizes.length);
         Log.i(TAG, "Final bitmap width = " + (bm != null ? bm.getWidth() : "No final bitmap"));
-        return bm;
+//        return bm;
+        return Bitmap.createScaledBitmap(bm, 200, 200, true);
     }
     private static Bitmap decodeBitmap(Context context, Uri theUri, int sampleSize) {
         Bitmap actuallyUsableBitmap = null;

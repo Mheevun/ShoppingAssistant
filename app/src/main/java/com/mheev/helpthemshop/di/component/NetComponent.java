@@ -1,6 +1,7 @@
 package com.mheev.helpthemshop.di.component;
 
 import com.mheev.helpthemshop.activity.BuyingFragment;
+import com.mheev.helpthemshop.activity.ItemDetailsActivity;
 import com.mheev.helpthemshop.activity.ItemManagmentFragment;
 import com.mheev.helpthemshop.api.api_service.ItemRequestManager;
 import com.mheev.helpthemshop.api.api_service.UserItemRequestManager;
@@ -22,8 +23,8 @@ public interface NetComponent {
     Retrofit retrofit();
     ItemRequestManager requestManager();
     ShoppingItemClient client();
-    UserItemRequestManager userRequestManager();
 
     void inject(ItemManagmentFragment itemManagmentFragment);
     void inject(BuyingFragment buyingFragment);
+    void inject(ItemDetailsActivity detailsActivity);//image uploader (ShoppingItemClient)
 }

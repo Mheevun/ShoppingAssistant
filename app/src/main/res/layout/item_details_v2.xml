@@ -131,7 +131,22 @@
             app:startXPosition="2dp"
             android:onClick="@{(view) -> viewModel.onClickImage(view)}"
             android:contentDescription="@string/item_avatar"
+            app:imgUrl="@{viewModel.avatarUrl}"
+            app:callback="@{viewModel.imageLoaderCallback}"
             />
+
+        <!--<ImageView-->
+            <!--android:id="@+id/avatar"-->
+            <!--android:layout_height="@dimen/image_width"-->
+            <!--android:layout_width="@dimen/image_width"-->
+            <!--android:layout_gravity="center_horizontal"-->
+            <!--android:background="@drawable/circle"-->
+            <!--android:transitionName="@string/transition_avatar"-->
+            <!--android:onClick="@{(view) -> viewModel.onClickImage(view)}"-->
+            <!--app:imgUrl="@{viewModel.avatarUrl}"-->
+            <!--app:callback="@{viewModel.imageLoaderCallback}"-->
+            <!--/>-->
+
 
         <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"

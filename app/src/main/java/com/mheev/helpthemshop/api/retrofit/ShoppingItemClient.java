@@ -5,15 +5,22 @@ import com.mheev.helpthemshop.model.api.ApiEditResponse;
 import com.mheev.helpthemshop.model.api.ApiQueryResponse;
 import com.mheev.helpthemshop.model.pojo.ShoppingItem;
 
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.Headers;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
+import retrofit2.http.Part;
 import retrofit2.http.Path;
 import rx.Observable;
+
+import static android.os.FileObserver.DELETE;
 
 /**
  * Created by mheev on 9/19/2016.
@@ -51,4 +58,12 @@ public interface ShoppingItemClient {
     Observable<ResponseBody> deleteUserItem(@Path("id")String userId, @Path("iid") String itemId);
 
 
+    /**********image********/
+
+    @POST("/")
+    @Multipart
+    Observable<ApiCreateResponse> createImage(@Part MultipartBody.Part file);
+
+    @DELETE("/{id}")
+    Observable<ResponseBody> deleteImage(@Path("id")String imageId);
 }
