@@ -9,8 +9,10 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
@@ -52,7 +54,7 @@ import rx.subscriptions.CompositeSubscription;
 /**
  * Created by mheev on 9/13/2016.
  */
-public class ItemManagmentFragment extends Fragment implements OnEditItemListener  {
+public class ItemManagmentFragment extends Fragment implements OnEditItemListener,SwipeRefreshLayout.OnRefreshListener {
     private final String TAG = getTag();
     protected CompositeSubscription subscriptions = new CompositeSubscription();
 
@@ -74,10 +76,20 @@ public class ItemManagmentFragment extends Fragment implements OnEditItemListene
         View view = binding.getRoot();
         viewModel = new ItemManagmentViewModel(this);
         binding.setViewModel(viewModel);
+        binding.swipeContainer.setOnRefreshListener(this);
 
         viewModel.isLoadingItems.set(true);
 
         return view;
+    }
+
+    //for swipeContainer
+    @Override
+    public void onRefresh(){
+        binding.swipeContainer.setRefreshing(false);
+        viewModel.isLoadingItems.set(true);
+        binding.myRecyclerView.setVisibility(View.INVISIBLE);
+        loadItems();
     }
 
 
@@ -179,6 +191,7 @@ public class ItemManagmentFragment extends Fragment implements OnEditItemListene
                     .build();
         }
         viewModel.isLoadingItems.set(false);
+        binding.myRecyclerView.setVisibility(View.VISIBLE);
         viewModel.initData(repository);
         initItemTouch(binding.myRecyclerView);
     }

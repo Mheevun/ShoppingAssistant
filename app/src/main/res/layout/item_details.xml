@@ -22,7 +22,7 @@
             android:id="@+id/header"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:background="#126679"
+            android:background="@color/colorPrimaryDark"
             android:paddingBottom="@dimen/content_border_padding"
             android:paddingLeft="@dimen/content_border_padding"
             android:paddingRight="@dimen/content_border_padding"
@@ -45,8 +45,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:hint="@string/hint_title"
-                    android:minWidth="100dp"
                     android:maxLines="1"
+                    android:minWidth="100dp"
                     android:text="@{viewModel.itemName}"
                     android:textColor="@color/colorWhite"
                     android:textCursorDrawable="@null"
@@ -66,30 +66,30 @@
                 app:hintTextAppearance="@style/ItemDetailsHeaderHintAppearance">
 
                 <EditText
-                android:id="@+id/group"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:hint="@string/hint_group"
-                android:minWidth="100dp"
-                android:maxLines="1"
-                android:text="@{viewModel.group}"
-                android:textColor="@color/colorWhite"
-                android:textSize="@dimen/item_subtitle_size" />
+                    android:id="@+id/group"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/hint_group"
+                    android:maxLines="1"
+                    android:minWidth="100dp"
+                    android:text="@{viewModel.group}"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/item_subtitle_size" />
 
             </android.support.design.widget.TextInputLayout>
         </RelativeLayout>
 
         <!--<View-->
-            <!--android:id="@+id/circle"-->
-            <!--android:layout_width="60dp"-->
-            <!--android:layout_height="60dp"-->
-            <!--android:layout_below="@+id/header"-->
-            <!--android:layout_gravity="right"-->
-            <!--android:layout_marginRight="100px"-->
-            <!--android:layout_marginTop="-70px"-->
-            <!--android:background="@drawable/circle"-->
-            <!--android:transitionName="@string/transition_avatar" -->
-            <!--/>-->
+        <!--android:id="@+id/circle"-->
+        <!--android:layout_width="60dp"-->
+        <!--android:layout_height="60dp"-->
+        <!--android:layout_below="@+id/header"-->
+        <!--android:layout_gravity="right"-->
+        <!--android:layout_marginRight="100px"-->
+        <!--android:layout_marginTop="-70px"-->
+        <!--android:background="@drawable/circle"-->
+        <!--android:transitionName="@string/transition_avatar" -->
+        <!--/>-->
 
         <ImageView
             android:id="@+id/avatar"
@@ -99,10 +99,9 @@
             android:layout_gravity="right"
             android:layout_marginRight="100px"
             android:layout_marginTop="-70px"
-            android:transitionName="@string/transition_avatar"
-            app:imgUrl="@{viewModel.avatarUrl}"
             android:background="@drawable/circle"
-            />
+            android:transitionName="@string/transition_avatar"
+            app:imgUrl="@{viewModel.avatarUrl}" />
 
         <ScrollView
             android:layout_width="fill_parent"
@@ -225,26 +224,18 @@
                     android:paddingLeft="@dimen/content_border_padding"
                     android:paddingTop="@dimen/different_content_padding">
 
-                    <android.support.design.widget.TextInputLayout
-                        android:id="@+id/item_note_layout"
+
+                    <EditText
+                        android:id="@+id/item_note"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColorHint="@color/colorPrimaryDark"
-                        android:theme="@style/EditTextContentTheme"
-                        app:hintTextAppearance="@style/ItemDetailsHintApperance">
+                        android:hint="@string/hint_note"
+                        android:maxLines="1"
+                        android:minWidth="@dimen/edittext_min_width"
+                        android:textAppearance="@style/ItemDetailsValueApperance"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/item_details_value" />
 
-                        <EditText
-                            android:id="@+id/item_note"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:hint="@string/hint_note"
-                            android:minWidth="@dimen/edittext_min_width"
-                            android:maxLines="1"
-                            android:textAppearance="@style/ItemDetailsValueApperance"
-                            android:textColor="@color/colorPrimaryDark"
-                            android:textSize="@dimen/item_details_value" />
-
-                    </android.support.design.widget.TextInputLayout>
 
                 </LinearLayout>
             </LinearLayout>
