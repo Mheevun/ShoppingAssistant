@@ -74,14 +74,13 @@ public class CustomAttribute {
 
     @BindingAdapter({"imgUrl"})
     public static void loadImage(ImageView imageView, String url) {
-
         // make call to the initial loading event
         Log.d("CustomAttribute", "imageUrl:"+url);
 
         Transformation transformation = new RoundedTransformationBuilder()
                 .borderColor(Color.WHITE)
                 .borderWidthDp(3)
-                .cornerRadiusDp(30)
+                .cornerRadiusDp(60)
                 .oval(false)
                 .build();
 

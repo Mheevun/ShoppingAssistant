@@ -9,7 +9,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -26,7 +25,6 @@ import android.support.v4.util.Pair;
 import com.mheev.helpthemshop.App;
 import com.mheev.helpthemshop.R;
 import com.mheev.helpthemshop.api.api_service.ItemRequestManager;
-import com.mheev.helpthemshop.api.api_service.RequestManager;
 import com.mheev.helpthemshop.databinding.SelectItemsBinding;
 import com.mheev.helpthemshop.di.component.DaggerNetNavigatorItemComponent;
 import com.mheev.helpthemshop.di.component.NetNavigatorItemComponent;
@@ -48,13 +46,15 @@ import javax.inject.Inject;
 import okhttp3.ResponseBody;
 import rx.Observer;
 import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by mheev on 9/13/2016.
  */
-public class ItemManagmentFragment extends Fragment implements OnEditItemListener,SwipeRefreshLayout.OnRefreshListener {
+public class ItemManagmentFragment extends Fragment implements OnEditItemListener, SwipeRefreshLayout.OnRefreshListener {
     private final String TAG = getTag();
     protected CompositeSubscription subscriptions = new CompositeSubscription();
 
@@ -85,7 +85,7 @@ public class ItemManagmentFragment extends Fragment implements OnEditItemListene
 
     //for swipeContainer
     @Override
-    public void onRefresh(){
+    public void onRefresh() {
         binding.swipeContainer.setRefreshing(false);
         viewModel.isLoadingItems.set(true);
         binding.myRecyclerView.setVisibility(View.INVISIBLE);
@@ -117,36 +117,38 @@ public class ItemManagmentFragment extends Fragment implements OnEditItemListene
         subscriptions.add(loadSubscription);
     }
 
-
-    public void onEditItemDetails(ShoppingItem item) {
+    public void onEditItemDetails(ShoppingItem item, View view) {
         Log.d(TAG, "create intent: " + item);
+
+        int position = viewModel.getPosition(item);
+        item.position = position;
+
         Intent intent = new Intent(getContext(), ItemDetailsActivity.class);
         EventBus.getDefault().postSticky(new EditItemEvent(item, this));
-//        startActivity(intent);
-        startActivity(intent, getDetailTransitionOption().toBundle());
+        startActivity(intent, getTransitionOption(view).toBundle());
     }
 
-    private ActivityOptionsCompat getDetailTransitionOption() {
-        View view = binding.getRoot();
+    private ActivityOptionsCompat getTransitionOption(View view) {
         return ActivityOptionsCompat.makeSceneTransitionAnimation(
                 getActivity(),
-                new Pair<View, String>(view.findViewById(R.id.avatar), this.getString(R.string.transition_avatar))
+                new Pair<View, String>(view, this.getString(R.string.transition_avatar))
 //                new Pair<View, String>(view.findViewById(R.id.item_name),context.getString(R.string.transition_name))
         );
     }
 
     public void onEditItemDetailsResult(ShoppingItem item) {
+
         Log.d(TAG, "get item from ItemDetailsActivity: " + item.getItemName());
-        if(item.getItemName()==null)return;
+        if (item.getItemName() == null) return;
         Subscription updateSubscription;
         viewModel.updateItem(item);
-        Log.d(TAG, "item id: "+item.getId());
-        if(item.isNew()) {
-            Log.d(TAG, "perform create item request"+item.getItemName());
+        Log.d(TAG, "item id: " + item.getId());
+        if (item.isNew()) {
+            Log.d(TAG, "perform create item request" + item.getItemName());
             updateSubscription = itemRequestManager.createItem(item).subscribe(new Action1<ApiCreateResponse>() {
                 @Override
                 public void call(ApiCreateResponse apiCreateResponse) {
-                    Log.d(TAG, "create item response details: "+apiCreateResponse.getObjectId());
+                    Log.d(TAG, "create item response details: " + apiCreateResponse.getObjectId());
                     item.setId(apiCreateResponse.getObjectId());
                     itemRequestManager.getItem(item.getId()).subscribe(new Action1<ShoppingItem>() {
                         @Override
@@ -156,13 +158,12 @@ public class ItemManagmentFragment extends Fragment implements OnEditItemListene
                     });
                 }
             });
-        }
-        else {
-            Log.d(TAG, "perform update item request: "+item.getItemName());
+        } else {
+            Log.d(TAG, "perform update item request: " + item.getItemName());
             updateSubscription = itemRequestManager.updateItem(item).subscribe(new Action1<ApiEditResponse>() {
                 @Override
                 public void call(ApiEditResponse apiEditResponse) {
-                    Log.d(TAG, "update item response details: "+apiEditResponse.getUpdatedAt());
+                    Log.d(TAG, "update item response details: " + apiEditResponse.getUpdatedAt());
                     itemRequestManager.getItem(item.getId()).subscribe(new Action1<ShoppingItem>() {
                         @Override
                         public void call(ShoppingItem shoppingItem) {
@@ -174,6 +175,34 @@ public class ItemManagmentFragment extends Fragment implements OnEditItemListene
             });
         }
         subscriptions.add(updateSubscription);
+    }
+
+
+    public void onDeleteItem(ShoppingItem item) {
+//        int position = viewModel.getPosition(item);
+        if (item.position < 0) return;
+        String itemId = viewModel.removeItem(item.position);
+        if (itemId != null) {
+            subscriptions.add(
+                    itemRequestManager.removeItem(itemId)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .unsubscribeOn(Schedulers.io())
+                            .subscribe(new Observer<ResponseBody>() {
+                        @Override
+                        public void onCompleted() {
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            e.printStackTrace();
+                        }
+
+                        @Override
+                        public void onNext(ResponseBody responseBody) {
+                        }
+                    }));
+        }
     }
 
     public void onSelectItem(ShoppingItem item) {
@@ -203,7 +232,7 @@ public class ItemManagmentFragment extends Fragment implements OnEditItemListene
 
     private void initItemTouch(final RecyclerView recyclerView) {
 
-        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT) {
+        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
                 return false;
@@ -216,10 +245,11 @@ public class ItemManagmentFragment extends Fragment implements OnEditItemListene
                 if (direction == ItemTouchHelper.RIGHT) {
                     ShoppingItem item = viewModel.moveItemToActivePlan(position);
                     onSelectItem(item);
-                } else {
-                    String id = viewModel.removeItem(position);
-                    onRemoveItem(id);
                 }
+//              else {
+//                    String id = viewModel.removeItem(position);
+//                    onRemoveItem(id);
+//                }
             }
 
 
@@ -238,17 +268,18 @@ public class ItemManagmentFragment extends Fragment implements OnEditItemListene
                         p.setColor(Color.parseColor("#388E3C"));
                         RectF background = new RectF((float) itemView.getLeft(), (float) itemView.getTop(), dX, (float) itemView.getBottom());
                         c.drawRect(background, p);
-                        icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_edit_white);
+                        icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_add_shopping_cart_white_24dp);
                         RectF icon_dest = new RectF((float) itemView.getLeft() + width, (float) itemView.getTop() + width, (float) itemView.getLeft() + 2 * width, (float) itemView.getBottom() - width);
                         c.drawBitmap(icon, null, icon_dest, p);
-                    } else {
-                        p.setColor(Color.parseColor("#D32F2F"));
-                        RectF background = new RectF((float) itemView.getRight() + dX, (float) itemView.getTop(), (float) itemView.getRight(), (float) itemView.getBottom());
-                        c.drawRect(background, p);
-                        icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_delete_white);
-                        RectF icon_dest = new RectF((float) itemView.getRight() - 2 * width, (float) itemView.getTop() + width, (float) itemView.getRight() - width, (float) itemView.getBottom() - width);
-                        c.drawBitmap(icon, null, icon_dest, p);
                     }
+//                    else {
+//                        p.setColor(Color.parseColor("#D32F2F"));
+//                        RectF background = new RectF((float) itemView.getRight() + dX, (float) itemView.getTop(), (float) itemView.getRight(), (float) itemView.getBottom());
+//                        c.drawRect(background, p);
+//                        icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_delete_white);
+//                        RectF icon_dest = new RectF((float) itemView.getRight() - 2 * width, (float) itemView.getTop() + width, (float) itemView.getRight() - width, (float) itemView.getBottom() - width);
+//                        c.drawBitmap(icon, null, icon_dest, p);
+//                    }
                 }
                 super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
             }
@@ -258,26 +289,6 @@ public class ItemManagmentFragment extends Fragment implements OnEditItemListene
         itemTouchHelper.attachToRecyclerView(recyclerView);
     }
 
-    protected void onRemoveItem(String itemId) {
-        if (itemId != null) {
-            subscriptions.add(itemRequestManager.removeItem(itemId).subscribe(new Observer<ResponseBody>() {
-                @Override
-                public void onCompleted() {
-
-                }
-
-                @Override
-                public void onError(Throwable e) {
-                    e.printStackTrace();
-                }
-
-                @Override
-                public void onNext(ResponseBody responseBody) {
-
-                }
-            }));
-        }
-    }
 
     @Override
     public void onDestroy() {

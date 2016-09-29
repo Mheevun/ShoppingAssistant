@@ -118,29 +118,7 @@ public class ImagePicker {
         }
         return list;
     }
-    public static File getFileFromResult(Context context, int requestCode, int resultCode,
-                                         Intent imageReturnedIntent){
-        Log.i(TAG, "getImageFromResult() called with: " + "resultCode = [" + resultCode + "]");
-        File imageFile = null;
-        if (resultCode == Activity.RESULT_OK && requestCode == PICK_IMAGE_ID) {
-            imageFile = getTemporalFile(context);
-            boolean isCamera = (imageReturnedIntent == null
-                    || imageReturnedIntent.getData() == null
-                    || imageReturnedIntent.getData().toString().contains(imageFile.toString()));
-            if (!isCamera) {
-                 /** ALBUM **/
-                Uri imageUri = imageReturnedIntent.getData();
-                imageFile = new File(imageUri.getPath());
-            }
-            Log.i(TAG, "file exist: " + imageFile.exists());
 
-        }
-        return imageFile;
-    }
-
-    public static Bitmap getImageFromFile(Context context, File imageFile){
-        return  getImageResized(context, Uri.fromFile(imageFile));
-    }
 
     public static Bitmap getImageFromResult(Context context, int requestCode, int resultCode,
                                             Intent imageReturnedIntent) {
@@ -212,7 +190,7 @@ public class ImagePicker {
                 && i < sampleSizes.length);
         Log.i(TAG, "Final bitmap width = " + (bm != null ? bm.getWidth() : "No final bitmap"));
 //        return bm;
-        return Bitmap.createScaledBitmap(bm, 200, 200, true);
+        return Bitmap.createScaledBitmap(bm, 100, 100, true);
     }
     private static Bitmap decodeBitmap(Context context, Uri theUri, int sampleSize) {
         Bitmap actuallyUsableBitmap = null;

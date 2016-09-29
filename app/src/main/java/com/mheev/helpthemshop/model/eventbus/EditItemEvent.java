@@ -9,6 +9,10 @@ import com.mheev.helpthemshop.model.pojo.ShoppingItem;
 
 public class EditItemEvent extends ItemEvent {
     private OnEditItemListener listener;
+    private boolean deleteFlag = false;
+
+
+
 
     public EditItemEvent(ShoppingItem item, OnEditItemListener listener) {
         super(item);
@@ -17,6 +21,18 @@ public class EditItemEvent extends ItemEvent {
 
     public void onEditItemCallback(ShoppingItem item){
         listener.onEditItemDetailsResult(item);
+    }
+
+    public void onDeleteCallback(ShoppingItem item){
+        listener.onDeleteItem(item);
+    }
+
+    public void setDeleteFlag(boolean deleteFlag) {
+        this.deleteFlag = deleteFlag;
+    }
+
+    public boolean getDeleteFlag() {
+        return deleteFlag;
     }
 
 }

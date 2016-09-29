@@ -23,9 +23,9 @@ public abstract class RequestManager {
     }
     public <T> Observable<T> getRequester(Observable<T> observable){
         return observable
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .unsubscribeOn(Schedulers.io());
+                .unsubscribeOn(Schedulers.newThread());
     }
     public abstract Observable<List<ShoppingItem>> loadItemList();
 

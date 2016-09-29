@@ -24,7 +24,7 @@ import com.codetroopers.betterpickers.numberpicker.NumberPickerDialogFragment;
 import com.mheev.helpthemshop.BR;
 import com.mheev.helpthemshop.R;
 import com.mheev.helpthemshop.activity.ImageLoaderCallback;
-import com.mheev.helpthemshop.activity.ItemDetailsDialogView;
+import com.mheev.helpthemshop.activity.ItemDetailsListener;
 import com.mheev.helpthemshop.model.pojo.Price;
 import com.mheev.helpthemshop.model.pojo.Quantity;
 import com.mheev.helpthemshop.model.pojo.SavedCurrency;
@@ -42,9 +42,9 @@ public class ItemDetailsViewModel extends BaseObservable implements ImageLoaderC
     private String TAG = ItemDetailsViewModel.class.getSimpleName();
 
     private AppCompatActivity context;
-    private ItemDetailsDialogView activity;
+    private ItemDetailsListener activity;
 
-    public ItemDetailsViewModel(ItemDetailsDialogView activity, ShoppingItem item) {
+    public ItemDetailsViewModel(ItemDetailsListener activity, ShoppingItem item) {
         this.item = item;
         this.context = (AppCompatActivity) activity;
         this.activity = activity;
@@ -52,6 +52,15 @@ public class ItemDetailsViewModel extends BaseObservable implements ImageLoaderC
 
     public ShoppingItem getItem() {
         return item;
+    }
+
+    @Bindable
+    public String getNote(){
+        return item.getNote();
+    }
+    public void setNote(String note){
+        item.setNote(note);
+        notifyPropertyChanged(BR.note);
     }
 
     @Bindable
@@ -234,8 +243,6 @@ public class ItemDetailsViewModel extends BaseObservable implements ImageLoaderC
 
     }
 
-    private ImageView imageView;
-
     public void onClickImage(View view) {
         activity.showAvatarPicker((ImageView) view);
     }
@@ -257,6 +264,11 @@ public class ItemDetailsViewModel extends BaseObservable implements ImageLoaderC
                 break;
         }
         return true;
+    }
+
+    public void onDeleteClick(){
+        Log.d(TAG, "Delete");
+        activity.onDeleteClick();
     }
 
 }

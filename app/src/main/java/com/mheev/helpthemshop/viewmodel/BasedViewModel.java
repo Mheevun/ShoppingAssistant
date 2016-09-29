@@ -18,8 +18,16 @@ public class BasedViewModel extends BaseObservable {
 
     protected ShoppingItemRepository itemRepository;
 
+
+    private OnEditItemListener listener;
+
     public BasedViewModel(OnEditItemListener listener) {
+        this.listener = listener;
         itemAdapter = new ItemAdapter(listener);
+    }
+
+    public OnEditItemListener getListener() {
+        return listener;
     }
 
     public void initData(ShoppingItemRepository itemRepository) {
@@ -33,8 +41,10 @@ public class BasedViewModel extends BaseObservable {
         itemAdapter.setItem(itemRepository.getItems());
     }
     public String removeItem(int position){
-        Log.d(TAG,"remove item: "+position);
         return itemAdapter.removeItem(position);
+    }
+    public int getPosition(ShoppingItem item){
+        return itemAdapter.getPosition(item);
     }
 
 }

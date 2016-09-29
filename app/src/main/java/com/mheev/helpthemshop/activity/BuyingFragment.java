@@ -10,7 +10,9 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.os.Bundle;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
@@ -32,14 +34,13 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
 /**
  * Created by mheev on 9/15/2016.
  */
 public class BuyingFragment extends Fragment implements OnEditItemListener {
 
     private BuyingViewModel viewModel;
+    private BuyingItemsBinding binding;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -49,7 +50,7 @@ public class BuyingFragment extends Fragment implements OnEditItemListener {
 //        setRequestManager(userRequestManager);
 
         viewModel = new BuyingViewModel(this, new UserItemDbHelper(this.getContext()));
-        BuyingItemsBinding binding = DataBindingUtil.inflate(inflater, R.layout.buying_items, container, false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.buying_items, container, false);
         View view = binding.getRoot();
         binding.setViewModel(viewModel);
         initItemTouch(binding.itemList);
@@ -63,13 +64,21 @@ public class BuyingFragment extends Fragment implements OnEditItemListener {
         viewModel.addItem(event.getItem());
     }
 
-    @Override
-    public void onEditItemDetails(ShoppingItem item) {
-        Log.d(getTag(), "create intent: " + item);
+
+    public void onEditItemDetails(ShoppingItem item, View view) {
+        Log.d("BuyingFragment", "create intent: " + item);
         Intent intent = new Intent(getContext(), ItemDetailsActivity.class);
         EventBus.getDefault().postSticky(new EditItemEvent(item, this));
-        startActivity(intent);
+        startActivity(intent, getTransitionOption(view).toBundle());
     }
+    private ActivityOptionsCompat getTransitionOption(View view) {
+        return ActivityOptionsCompat.makeSceneTransitionAnimation(
+                getActivity(),
+                new Pair<View, String>(view, this.getString(R.string.transition_avatar))
+//                new Pair<View, String>(view.findViewById(R.id.item_name),context.getString(R.string.transition_name))
+        );
+    }
+
 
     @Override
     public void onEditItemDetailsResult(ShoppingItem item) {
@@ -78,6 +87,11 @@ public class BuyingFragment extends Fragment implements OnEditItemListener {
             viewModel.addItem(item);
         else
             viewModel.updateItem(item);
+    }
+
+    @Override
+    public void onDeleteItem(ShoppingItem item) {
+        viewModel.removeItem(item.position);
     }
 
 
@@ -138,4 +152,5 @@ public class BuyingFragment extends Fragment implements OnEditItemListener {
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
     }
+
 }

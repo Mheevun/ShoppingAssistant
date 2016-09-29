@@ -92,6 +92,7 @@
             android:onClick="@{(v)->viewModel.onAddButton(v)}"
             android:src="@drawable/ic_add_white_24dp"
             android:visibility="@{viewModel.isLoadingItems? View.GONE:View.VISIBLE}"
+            android:transitionName="@string/transition_avatar"
             app:backgroundTint="@color/colorAccent"
             app:borderWidth="0dp"
             app:elevation="6dp"

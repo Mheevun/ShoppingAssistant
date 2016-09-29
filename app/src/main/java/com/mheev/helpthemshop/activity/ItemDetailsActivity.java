@@ -10,8 +10,6 @@ import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
-import android.view.animation.AlphaAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -56,7 +54,7 @@ import rx.schedulers.Schedulers;
  */
 @RuntimePermissions
 public class ItemDetailsActivity extends AppCompatActivity
-        implements ItemDetailsDialogView {
+        implements ItemDetailsListener {
     private static final String TAG = ItemDetailsActivity.class.getSimpleName();
     private static final float PERCENTAGE_TO_SHOW_TITLE_AT_TOOLBAR = 0.9f;
     private static final float PERCENTAGE_TO_HIDE_TITLE_DETAILS = 0.3f;
@@ -127,7 +125,7 @@ public class ItemDetailsActivity extends AppCompatActivity
 
 
 //        startAlphaAnimation(mTitle, 0, View.INVISIBLE);
-        Log.d(TAG, "onCreate item:" + item);
+        Log.d(TAG, "onCreate item: " + item);
         viewModel = new ItemDetailsViewModel(this, item);
         binding.setViewModel(viewModel);
     }
@@ -137,15 +135,25 @@ public class ItemDetailsActivity extends AppCompatActivity
     @Subscribe(sticky = true)
     public void onReciveEditEvent(EditItemEvent event) {
         this.event = event;
-        Log.d(TAG, "recieve item: " + event.getItem());
+        Log.d(TAG, "recieve item onReciveEditEvent: " + event.getItem());
         item = event.getItem();
     }
 
     @Override
     protected void onDestroy() {
+        Log.d(TAG, "on destroy; return item:" + viewModel.getItem());
         super.onDestroy();
         EventBus.getDefault().unregister(this);
-        event.onEditItemCallback(item);
+
+        if(event.getDeleteFlag())
+            event.onDeleteCallback(viewModel.getItem());
+        else
+            event.onEditItemCallback(viewModel.getItem());
+    }
+
+    public void onDeleteClick(){
+        event.setDeleteFlag(true);
+        finishAfterTransition();
     }
 
 //    @Override
@@ -207,6 +215,7 @@ public class ItemDetailsActivity extends AppCompatActivity
     public void showAvatarPicker(ImageView imgView) {
         ItemDetailsActivityPermissionsDispatcher.showAvatarPickerAfterPermissionWithCheck(this, imgView);
     }
+
 
     private static ImageView imageView;
 

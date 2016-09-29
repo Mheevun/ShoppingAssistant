@@ -44,6 +44,15 @@ public class BuyingViewModel{
     }
 
     public void onDoneButton(View v){
+        itemAdapter.clear();
+        dbHelper.clear();
+    }
 
+    public int getPosition(ShoppingItem item){
+        return itemAdapter.getPosition(item);
+    }
+
+    public void removeItem(ShoppingItem item) {
+        removeItem(getPosition(item));
     }
 }

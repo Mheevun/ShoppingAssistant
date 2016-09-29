@@ -15,7 +15,7 @@
 
     <android.support.v7.widget.CardView
         android:id="@+id/card_view"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_gravity="center"
@@ -27,10 +27,7 @@
         app:cardCornerRadius="2dp"
         app:contentPadding="10dp">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:onClick="@{(v) -> vm.onItemClick(v)}">
+
 
             <!--<View-->
             <!--android:id="@+id/avatar"-->
@@ -61,6 +58,7 @@
                 android:paddingLeft="15dp"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentStart="true"
+                android:onClick="@{(v) -> vm.onItemClick(v)}"
                 >
                 <ImageView
                     android:id="@+id/avatar"
@@ -71,6 +69,10 @@
                     app:imgUrl="@{vm.avatarUrl}"
                     android:background="@drawable/circle"
                     android:transitionName="@string/transition_avatar"
+                    app:backgroundTint="@color/colorAccent"
+                    app:borderWidth="0dp"
+                    app:elevation="6dp"
+                    app:pressedTranslationZ="12dp"
                     />
 
                 <TextView
@@ -83,8 +85,8 @@
                     android:text="@{vm.itemSummary}"
                     android:textAppearance="?attr/textAppearanceListItem"
                     android:textSize="@dimen/article_subheading" />
+
             </RelativeLayout>
-        </RelativeLayout>
 
     </android.support.v7.widget.CardView>
 

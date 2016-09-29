@@ -20,10 +20,8 @@ public class ItemManagmentViewModel extends BasedViewModel {
     public ObservableField<String> searchText = new ObservableField<String>();
     public ObservableBoolean isLoadingItems = new ObservableBoolean(false);
 
-    private OnEditItemListener listener;
     public ItemManagmentViewModel(OnEditItemListener listener) {
         super(listener);
-        this.listener = listener;
     }
 
     public ShoppingItem moveItemToActivePlan(int position) {
@@ -33,7 +31,7 @@ public class ItemManagmentViewModel extends BasedViewModel {
     }
 
     public void onAddButton(View view) {
-        listener.onEditItemDetails(new ShoppingItem());
+        getListener().onEditItemDetails(new ShoppingItem(), view);
     }
 
     public void onTextChanged(final CharSequence c) {

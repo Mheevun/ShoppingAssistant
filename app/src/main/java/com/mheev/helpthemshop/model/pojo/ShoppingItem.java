@@ -1,5 +1,6 @@
 package com.mheev.helpthemshop.model.pojo;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
@@ -10,6 +11,9 @@ import java.util.List;
  * Created by mheev on 9/11/2016.
  */
 public class ShoppingItem {
+    @Expose(serialize = false, deserialize = false)
+    public int position;
+
     private String itemName;
     private String itemDescription;
 

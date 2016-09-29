@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -18,6 +19,15 @@
         android:orientation="vertical"
         android:weightSum="1">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:orientation="horizontal">
+
+        </LinearLayout>
+
+
         <RelativeLayout
             android:id="@+id/header"
             android:layout_width="fill_parent"
@@ -25,8 +35,7 @@
             android:background="@color/colorPrimaryDark"
             android:paddingBottom="@dimen/content_border_padding"
             android:paddingLeft="@dimen/content_border_padding"
-            android:paddingRight="@dimen/content_border_padding"
-            android:paddingTop="@dimen/content_border_padding">
+            android:paddingRight="@dimen/content_border_padding">
 
 
             <android.support.design.widget.TextInputLayout
@@ -34,6 +43,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:minHeight="30dp"
+                android:paddingTop="10dp"
                 android:textCursorDrawable="@null"
                 android:theme="@style/EditTextHeaderTheme"
                 app:hintTextAppearance="@style/ItemDetailsHeaderHintAppearance"
@@ -47,7 +57,7 @@
                     android:hint="@string/hint_title"
                     android:maxLines="1"
                     android:minWidth="100dp"
-                    android:text="@{viewModel.itemName}"
+                    android:text="@={viewModel.itemName}"
                     android:textColor="@color/colorWhite"
                     android:textCursorDrawable="@null"
                     android:textSize="@dimen/item_title_size"
@@ -72,11 +82,26 @@
                     android:hint="@string/hint_group"
                     android:maxLines="1"
                     android:minWidth="100dp"
-                    android:text="@{viewModel.group}"
+                    android:text="@={viewModel.group}"
                     android:textColor="@color/colorWhite"
                     android:textSize="@dimen/item_subtitle_size" />
 
             </android.support.design.widget.TextInputLayout>
+
+            <ImageView
+                android:id="@+id/delete_btn"
+                android:layout_width="35dp"
+                android:layout_height="30dp"
+                android:layout_marginLeft="140dp"
+                android:gravity="right"
+                app:srcCompat="@drawable/ic_delete_forever_white_24dp"
+                android:clickable="true"
+                android:onClick="@{()-> viewModel.onDeleteClick()}"
+                android:layout_marginBottom="19dp"
+                android:layout_above="@+id/group_layout"
+                android:layout_alignParentEnd="true" />
+
+
         </RelativeLayout>
 
         <!--<View-->
@@ -93,15 +118,20 @@
 
         <ImageView
             android:id="@+id/avatar"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
             android:layout_below="@+id/header"
             android:layout_gravity="right"
-            android:layout_marginRight="100px"
-            android:layout_marginTop="-70px"
+            android:layout_marginRight="70px"
+            android:layout_marginTop="-190px"
             android:background="@drawable/circle"
+            android:onClick="@{(view) -> viewModel.onClickImage(view)}"
             android:transitionName="@string/transition_avatar"
+            app:backgroundTint="@color/colorAccent"
+            app:borderWidth="0dp"
+            app:elevation="6dp"
             app:imgUrl="@{viewModel.avatarUrl}" />
+
 
         <ScrollView
             android:layout_width="fill_parent"
@@ -223,7 +253,11 @@
                     android:orientation="vertical"
                     android:paddingLeft="@dimen/content_border_padding"
                     android:paddingTop="@dimen/different_content_padding">
-
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    >
 
                     <EditText
                         android:id="@+id/item_note"
@@ -232,12 +266,14 @@
                         android:hint="@string/hint_note"
                         android:maxLines="1"
                         android:minWidth="@dimen/edittext_min_width"
+                        android:text="@{viewModel.note}"
                         android:textAppearance="@style/ItemDetailsValueApperance"
                         android:textColor="@color/colorBlack"
                         android:textSize="@dimen/item_details_value" />
 
-
                 </LinearLayout>
+                </LinearLayout>
+
             </LinearLayout>
         </ScrollView>
         <!--todo: include for reuse item deatalis UI-->

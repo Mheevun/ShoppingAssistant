@@ -54,12 +54,15 @@ public class ItemAdapter extends RecyclerView.Adapter<ShoppingViewHodler>{
             return items.size();
     }
 
-
     public String removeItem(int position){
         ShoppingItem item = items.remove(position); //int position = list.indexOf(data)
         notifyItemRemoved(position);
         notifyItemRangeChanged(position,items.size());
         return item.getId();
+    }
+
+    public int getPosition(ShoppingItem item){
+        return items.indexOf(item);
     }
 
     public void setItem(List<ShoppingItem> items){
