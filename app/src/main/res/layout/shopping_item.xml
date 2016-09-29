@@ -8,6 +8,7 @@
         <variable
             name="vm"
             type="com.mheev.helpthemshop.viewmodel.ItemViewModel" />
+
         <import type="android.view.View" />
 
     </data>
@@ -31,30 +32,57 @@
             android:layout_height="match_parent"
             android:onClick="@{(v) -> vm.onItemClick(v)}">
 
-            <View
-                android:id="@+id/avatar"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
-                android:background="@drawable/circle" />
+            <!--<View-->
+            <!--android:id="@+id/avatar"-->
+            <!--android:layout_width="40dp"-->
+            <!--android:layout_height="40dp"-->
+            <!--android:layout_alignParentLeft="true"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:background="@drawable/circle" />-->
+
+            <!--<de.hdodenhof.circleimageview.CircleImageView-->
+                <!--android:id="@+id/avatar"-->
+                <!--android:layout_width="40dp"-->
+                <!--android:layout_height="40dp"-->
+                <!--android:layout_alignParentStart="true"-->
+                <!--android:layout_centerVertical="true"-->
+                <!--android:layout_gravity="center_horizontal"-->
+                <!--android:contentDescription="@string/item_avatar"-->
+                <!--android:src="@drawable/quila"-->
+                <!--android:transitionName="@string/transition_avatar"-->
+                <!--app:border_color="@android:color/white"-->
+                <!--app:imgUrl="@{vm.avatarUrl}"-->
+                <!--/>-->
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_toRightOf="@+id/avatar"
                 android:orientation="horizontal"
-                android:paddingLeft="15dp">
-
+                android:paddingLeft="15dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true"
+                >
+                <ImageView
+                    android:id="@+id/avatar"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    app:imgUrl="@{vm.avatarUrl}"
+                    android:background="@drawable/circle"
+                    android:transitionName="@string/transition_avatar"
+                    />
 
                 <TextView
                     android:id="@+id/item_summary"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/avatar"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="15dp"
                     android:text="@{vm.itemSummary}"
                     android:textAppearance="?attr/textAppearanceListItem"
                     android:textSize="@dimen/article_subheading" />
-
             </RelativeLayout>
         </RelativeLayout>
 

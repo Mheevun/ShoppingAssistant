@@ -110,17 +110,18 @@ public class ItemManagmentFragment extends Fragment implements OnEditItemListene
         Log.d(TAG, "create intent: " + item);
         Intent intent = new Intent(getContext(), ItemDetailsActivity.class);
         EventBus.getDefault().postSticky(new EditItemEvent(item, this));
-        startActivity(intent);
+//        startActivity(intent);
+        startActivity(intent, getDetailTransitionOption().toBundle());
     }
 
-//    private ActivityOptionsCompat getDetailTransitionOption() {
-//        View view = binding.getRoot();
-//        return ActivityOptionsCompat.makeSceneTransitionAnimation(
-//                getActivity(),
-//                new Pair<View, String>(view.findViewById(R.id.avatar), this.getString(R.string.transition_avatar))
-////                new Pair<View, String>(view.findViewById(R.id.item_name),context.getString(R.string.transition_name))
-//        );
-//    }
+    private ActivityOptionsCompat getDetailTransitionOption() {
+        View view = binding.getRoot();
+        return ActivityOptionsCompat.makeSceneTransitionAnimation(
+                getActivity(),
+                new Pair<View, String>(view.findViewById(R.id.avatar), this.getString(R.string.transition_avatar))
+//                new Pair<View, String>(view.findViewById(R.id.item_name),context.getString(R.string.transition_name))
+        );
+    }
 
     public void onEditItemDetailsResult(ShoppingItem item) {
         Log.d(TAG, "get item from ItemDetailsActivity: " + item.getItemName());

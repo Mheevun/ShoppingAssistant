@@ -3,18 +3,21 @@ package com.mheev.helpthemshop.binding_adapter;
 import android.databinding.BindingAdapter;
 import android.databinding.BindingConversion;
 import android.databinding.ObservableArrayList;
+import android.graphics.Color;
 import android.support.annotation.ColorRes;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.ImageView;
 
+import com.makeramen.roundedimageview.RoundedTransformationBuilder;
 import com.mheev.helpthemshop.R;
 import com.mheev.helpthemshop.activity.ImageLoaderCallback;
 import com.mheev.helpthemshop.adapter.ItemAdapter;
 import com.mheev.helpthemshop.model.pojo.ShoppingItem;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Transformation;
 
 /**
  * Created by mheev on 9/14/2016.
@@ -50,6 +53,7 @@ public class CustomAttribute {
 
         Picasso.with(imageView.getContext())
                 .load(url)
+                .resize(100,100)
                 .placeholder(imageView.getDrawable())
                 .into(imageView, new Callback() {
                     @Override
@@ -68,6 +72,27 @@ public class CustomAttribute {
                 });
     }
 
+    @BindingAdapter({"imgUrl"})
+    public static void loadImage(ImageView imageView, String url) {
+
+        // make call to the initial loading event
+        Log.d("CustomAttribute", "imageUrl:"+url);
+
+        Transformation transformation = new RoundedTransformationBuilder()
+                .borderColor(Color.WHITE)
+                .borderWidthDp(3)
+                .cornerRadiusDp(30)
+                .oval(false)
+                .build();
+
+        Picasso.with(imageView.getContext())
+                .load(url)
+//                .resize(100,100)
+                .fit()
+                .transform(transformation)
+                .placeholder(imageView.getDrawable())
+                .into(imageView);
+    }
 
 
 }

@@ -5,7 +5,7 @@ package com.mheev.helpthemshop.model.pojo;
  */
 public class Price {
     private int value;
-    private String currency;
+    private String currency =  "฿";
 
     public Price(){
 

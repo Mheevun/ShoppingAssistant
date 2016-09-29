@@ -99,5 +99,7 @@ dependencies {
 
     //image loader
     compile 'com.squareup.picasso:picasso:2.5.2'
+
+    compile 'com.makeramen:roundedimageview:2.2.1'
 }
 

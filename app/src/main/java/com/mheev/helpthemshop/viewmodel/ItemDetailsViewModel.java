@@ -58,7 +58,8 @@ public class ItemDetailsViewModel extends BaseObservable implements ImageLoaderC
     public String getItemName() {
         return item.getItemName();
     }
-    public void setItemName(String name){
+
+    public void setItemName(String name) {
         item.setItemName(name);
         notifyPropertyChanged(BR.itemName);
     }
@@ -67,7 +68,8 @@ public class ItemDetailsViewModel extends BaseObservable implements ImageLoaderC
     public String getGroup() {
         return item.getGroup();
     }
-    public void setGroup(String group){
+
+    public void setGroup(String group) {
         item.setGroup(group);
         notifyPropertyChanged(BR.group);
     }
@@ -81,6 +83,7 @@ public class ItemDetailsViewModel extends BaseObservable implements ImageLoaderC
     public void setAmount(int amount) {
         item.setQuantity(new Quantity(amount, getUnit()));
         notifyPropertyChanged(BR.amount);
+        notifyPropertyChanged(BR.priceTotal);
     }
 
     @Bindable
@@ -103,40 +106,38 @@ public class ItemDetailsViewModel extends BaseObservable implements ImageLoaderC
         if (item.getPrice() == null) item.setPrice(new Price());
         item.getPrice().setValue(priceValue);
         notifyPropertyChanged(BR.priceValue);
+        notifyPropertyChanged(BR.priceTotal);
     }
 
     @Bindable
     public String getPriceCurrency() {
         return item.getPrice() != null ? item.getPrice().getCurrency() : "฿";
     }
-
     public void setPriceCurrency(String unit) {
         if (item.getPrice() == null) item.setPrice(new Price());
         item.getPrice().setCurrency(unit);
         notifyPropertyChanged(BR.priceCurrency);
-    }
-
-    public String getPriceTotal() {
-        Price price = item.getPrice();
-        Quantity quantity = item.getQuantity();
-        if (price != null && item.getQuantity() != null) {
-            int total = price.getValue() * quantity.getAmount();
-            return String.valueOf(total);
-        }
-        return null;
+        notifyPropertyChanged(BR.priceTotal);
     }
 
     @Bindable
-    public String getAvatarUrl(){
+    public String getPriceTotal() {
+        int total = getPriceValue() * getAmount();
+        return "(total: " + total + " " + getPriceCurrency() + ")";
+    }
+
+    @Bindable
+    public String getAvatarUrl() {
         return item.getItemAvatarURL();
     }
-    public void setAvatarUrl(String url){
+
+    public void setAvatarUrl(String url) {
         item.setItemAvatarURL(url);
         notifyPropertyChanged(BR.avatarUrl);
     }
 
 
-    public ImageLoaderCallback getImageLoaderCallback(){
+    public ImageLoaderCallback getImageLoaderCallback() {
         return this;
     }
 
@@ -216,7 +217,7 @@ public class ItemDetailsViewModel extends BaseObservable implements ImageLoaderC
                                 setPriceCurrency(list[which]);
                                 break;
                             default:
-                                Log.d(TAG,"Unit fail");
+                                Log.d(TAG, "Unit fail");
                         }
 
                     }
@@ -234,22 +235,23 @@ public class ItemDetailsViewModel extends BaseObservable implements ImageLoaderC
     }
 
     private ImageView imageView;
-    public void onClickImage(View view){
+
+    public void onClickImage(View view) {
         activity.showAvatarPicker((ImageView) view);
     }
+
     public boolean onMenuItemClick(MenuItem menu) {
-        switch (menu.getItemId()){
+        switch (menu.getItemId()) {
             case R.id.menu_favorite:
-                if(!item.isFavorite()){
+                if (!item.isFavorite()) {
                     item.setFavorite(true);
                     menu.setIcon(R.drawable.heart);
-                    Drawable icon= menu.getIcon();
-                    ColorFilter filter = new LightingColorFilter( Color.RED, Color.RED);
+                    Drawable icon = menu.getIcon();
+                    ColorFilter filter = new LightingColorFilter(Color.RED, Color.RED);
                     icon.setColorFilter(filter);
-                }
-                else{
+                } else {
                     item.setFavorite(false);
-                    menu.getIcon().setColorFilter(new LightingColorFilter( Color.WHITE, Color.WHITE));
+                    menu.getIcon().setColorFilter(new LightingColorFilter(Color.WHITE, Color.WHITE));
                     menu.setIcon(R.drawable.ic_heart_outline_white_24dp);
                 }
                 break;

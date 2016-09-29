@@ -1,9 +1,11 @@
 package com.mheev.helpthemshop.viewmodel;
 
 import android.databinding.BaseObservable;
+import android.databinding.Bindable;
 import android.databinding.ObservableBoolean;
 import android.view.View;
 
+import com.mheev.helpthemshop.BR;
 import com.mheev.helpthemshop.activity.OnEditItemListener;
 import com.mheev.helpthemshop.model.ShoppingItemRepository;
 import com.mheev.helpthemshop.activity.ItemDetailsActivity;
@@ -43,6 +45,15 @@ public class ItemViewModel extends BaseObservable{
             summary = summary + LINE +item.getQuantity().getAmount() + SPACE +  item.getQuantity().getUnit();
         }
         return summary;
+    }
+
+    @Bindable
+    public String getAvatarUrl(){
+        return item.getItemAvatarURL();
+    }
+    public void setAvatarUrl(String url){
+        item.setItemAvatarURL(url);
+        notifyPropertyChanged(BR.avatarUrl);
     }
 
     public void onItemClick(View view){

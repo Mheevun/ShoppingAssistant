@@ -1,6 +1,7 @@
 package com.mheev.helpthemshop.viewmodel;
 
 import android.util.Log;
+import android.view.View;
 
 import com.mheev.helpthemshop.activity.OnEditItemListener;
 import com.mheev.helpthemshop.adapter.ItemAdapter;
@@ -42,5 +43,7 @@ public class BuyingViewModel{
         dbHelper.removeItem(id);
     }
 
+    public void onDoneButton(View v){
 
+    }
 }
