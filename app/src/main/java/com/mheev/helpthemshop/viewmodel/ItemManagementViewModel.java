@@ -1,9 +1,7 @@
 package com.mheev.helpthemshop.viewmodel;
 
-import android.databinding.ObservableArrayList;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
-import android.databinding.ObservableList;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -11,39 +9,37 @@ import android.view.View;
 import com.mheev.helpthemshop.R;
 import com.mheev.helpthemshop.activity.EditItemHandler;
 import com.mheev.helpthemshop.adapter.ItemAdapter;
-import com.mheev.helpthemshop.model.ShoppingItemRepository;
-import com.mheev.helpthemshop.model.eventbus.EditItemEventResult;
+import com.mheev.helpthemshop.model.ItemRepository;
+import com.mheev.helpthemshop.model.UserItemRepository;
 import com.mheev.helpthemshop.model.pojo.ShoppingItem;
 import com.mheev.helpthemshop.util.Navigator;
 
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Named;
-
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
-
-import static com.mheev.helpthemshop.di.module.ItemModule.ITEM_REPOSITORY;
 
 
 /**
  * Created by mheev on 9/14/2016.
  */
-public class ItemManagmentViewModel {
-    private String TAG = "ItemManagmentViewModel";
+public class ItemManagementViewModel {
+    private String TAG = "ItemManagementViewModel";
     public ObservableField<String> searchText = new ObservableField<String>();
-    public ObservableBoolean isLoadingItems = new ObservableBoolean(false);
+    public ObservableBoolean isLoadingItems;
 
     private ItemAdapter itemAdapter;
     public Navigator navigator;
 
+    private UserItemRepository userItemRepository;
+    private ItemRepository itemRepository;
+
     @Inject
-    @Named(ITEM_REPOSITORY)
-    public ItemManagmentViewModel(ShoppingItemRepository itemRepository, Navigator navigator) {
+    public ItemManagementViewModel(ItemRepository itemRepository, Navigator navigator, UserItemRepository userItemRepository) {
         this.navigator = navigator;
-        itemAdapter = new ItemAdapter(itemRepository, R.layout.shopping_item, new ItemViewModel(itemRepository));
+        this.userItemRepository = userItemRepository;
+        this.itemRepository = itemRepository;
+        itemAdapter = new ItemAdapter(itemRepository, R.layout.shopping_item);
+        isLoadingItems = itemRepository.getIsLoading();
     }
 
     //bind to view
@@ -51,10 +47,10 @@ public class ItemManagmentViewModel {
         return itemAdapter;
     }
 
-    public ShoppingItem moveItemToActivePlan(int position) {
+    public void moveItemToBuying(int position) {
         ShoppingItem targetItem = itemAdapter.getDisplayItems().get(position);
         Log.d(TAG, "move item to buying: "+targetItem.getItemName());
-        return targetItem;
+        userItemRepository.updateItem(targetItem);
     }
 
     public void onAddButton(View view) {
@@ -85,5 +81,9 @@ public class ItemManagmentViewModel {
                 displayItems.add(new ShoppingItem(text));
             }
         }
+    }
+
+    public void loadItems() {
+       itemRepository.loadItems();
     }
 }

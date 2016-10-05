@@ -2,35 +2,29 @@ package com.mheev.helpthemshop.binding_adapter;
 
 import android.databinding.BindingAdapter;
 import android.databinding.BindingConversion;
-import android.databinding.ObservableArrayList;
-import android.databinding.ObservableList;
 import android.graphics.Color;
 import android.support.annotation.ColorRes;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Layout;
 import android.util.Log;
 import android.widget.ImageView;
 
 import com.makeramen.roundedimageview.RoundedTransformationBuilder;
 import com.mheev.helpthemshop.R;
 import com.mheev.helpthemshop.activity.ImageLoaderCallback;
-import com.mheev.helpthemshop.adapter.ItemAdapter;
-import com.mheev.helpthemshop.model.pojo.ShoppingItem;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
-
-import java.util.List;
 
 /**
  * Created by mheev on 9/14/2016.
  */
 public class CustomAttribute {
-    @BindingAdapter({"adapter","itemLayout"})
-    public static void bindList(RecyclerView view, RecyclerView.Adapter adapter, RecyclerView.LayoutManager layoutManager) {
+    @BindingAdapter("adapter")
+    public static void bindList(RecyclerView view, RecyclerView.Adapter adapter) {
+        Log.d("CustomAttribute", "set RecyclerView attribute");
 //        LinearLayoutManager layoutManager = new LinearLayoutManager(view.getContext());
-        view.setLayoutManager(layoutManager);
+        view.setLayoutManager(new GridLayoutManager(view.getContext(),2));
         view.setAdapter(adapter);
     }
 

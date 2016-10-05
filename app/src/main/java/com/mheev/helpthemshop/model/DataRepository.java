@@ -1,6 +1,7 @@
 package com.mheev.helpthemshop.model;
 
 import android.databinding.ObservableArrayList;
+import android.databinding.ObservableBoolean;
 
 import com.mheev.helpthemshop.model.pojo.ShoppingItem;
 
@@ -10,6 +11,7 @@ import com.mheev.helpthemshop.model.pojo.ShoppingItem;
 
 public interface DataRepository {
     public void loadItems();
+    public ObservableBoolean getIsLoading();
     public void updateItem(ShoppingItem item);
     public void removeItem(ShoppingItem item);
     public void removeItem(int position);

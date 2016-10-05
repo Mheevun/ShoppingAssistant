@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 
-import com.mheev.helpthemshop.model.ShoppingItemRepository;
+import com.mheev.helpthemshop.model.ItemRepository;
 import com.mheev.helpthemshop.model.pojo.ShoppingItem;
 import com.mheev.helpthemshop.viewmodel.ItemDetailsViewModel;
 
@@ -17,7 +17,7 @@ import javax.inject.Inject;
 public class ItemDetailActivity_deprecate extends AppCompatActivity{
     public static final String ID = "ID";
     @Inject
-    ShoppingItemRepository itemRepo;
+    ItemRepository itemRepo;
 
     private ItemDetailsViewModel viewModel;
 

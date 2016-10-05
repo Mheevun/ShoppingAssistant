@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Help Them Shop</string>
+    <string name="app_name">ShopMe</string>
     <string name="hint_search_or_add">Would you like to buy?</string>
     <string name="item_avatar">item avatar</string>
     <string name="title_activity_details">Details</string>

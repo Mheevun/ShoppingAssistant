@@ -7,14 +7,12 @@ import android.support.v4.util.Pair;
 import android.view.View;
 
 import com.mheev.helpthemshop.R;
-import com.mheev.helpthemshop.activity.ItemDetailsResultListener;
 import com.mheev.helpthemshop.activity.ItemDetailsActivity;
+import com.mheev.helpthemshop.activity.ItemDetailsResultListener;
 import com.mheev.helpthemshop.model.eventbus.DetailActivityResultType;
 import com.mheev.helpthemshop.model.eventbus.EditItemEvent;
 import com.mheev.helpthemshop.model.eventbus.EditItemEventResult;
 import com.mheev.helpthemshop.model.pojo.ShoppingItem;
-
-import org.greenrobot.eventbus.EventBus;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -28,7 +26,6 @@ public class Navigator {
     public static final RxBus<EditItemEvent> editItemBus = RxBus.createWithLatest();//singleton bus
 
     public Navigator(Activity currentActivity) {
-        EventBus.getDefault().register(this);
         this.currentActivity = currentActivity;
     }
 

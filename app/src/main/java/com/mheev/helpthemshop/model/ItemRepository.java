@@ -1,6 +1,7 @@
 package com.mheev.helpthemshop.model;
 
 import android.databinding.ObservableArrayList;
+import android.databinding.ObservableBoolean;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -19,13 +20,14 @@ import rx.Subscription;
 /**
  * Created by mheev on 9/15/2016.
  */
-public class ShoppingItemRepository implements DataRepository {
+public class ItemRepository implements DataRepository {
     private ObservableArrayList<ShoppingItem> items = new ObservableArrayList<ShoppingItem>();
-    private static final String TAG = "ShoppingItemRepository";
+    private ObservableBoolean isLoading = new ObservableBoolean(true);
+    private static final String TAG = "ItemRepository";
     private ItemRequestManager requestManager;
     private BaseRxFragment baseActivity;
 
-    public ShoppingItemRepository(BaseRxFragment baseActivity, ItemRequestManager requestManager) {
+    public ItemRepository(BaseRxFragment baseActivity, ItemRequestManager requestManager) {
         this.requestManager = requestManager;
         this.baseActivity = baseActivity;
 
@@ -34,26 +36,35 @@ public class ShoppingItemRepository implements DataRepository {
 
     public void loadItems() {
         Log.d(TAG, "load item");
+        isLoading.set(true);
         Subscription loadSubscription = requestManager.loadItemList()
+                .doOnNext(shoppingItems -> setItems(shoppingItems))
                 .subscribe(new Observer<List<ShoppingItem>>() {
                     @Override
                     public void onCompleted() {
-                        baseActivity.showToast("Load data complete", Toast.LENGTH_SHORT);
+                        baseActivity.showToast("Load data complete", Toast.LENGTH_LONG);
+                        isLoading.set(false);
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         baseActivity.showToast("Can't load data", Toast.LENGTH_SHORT);
                         e.printStackTrace();
+                        isLoading.set(false);
                     }
 
                     @Override
                     public void onNext(List<ShoppingItem> shoppingItemList) {
+                        Log.d(TAG, "set item in the memory");
                         setItems(shoppingItemList);
                     }
                 });
         baseActivity.getSubscriptions().add(loadSubscription);
     }
+    public ObservableBoolean getIsLoading() {
+        return isLoading;
+    }
+
 
     private void setItems(List<ShoppingItem> shoppingItemList) {
         items.clear();
@@ -156,7 +167,7 @@ public class ShoppingItemRepository implements DataRepository {
     }
 
     public ShoppingItem getItem(String id) {
-        Log.d("ShoppingItemRepository", "item size: " + items.size());
+        Log.d("ItemRepository", "item size: " + items.size());
         for (ShoppingItem item : items) {
             if (item.getId().equals(id))
                 return item;

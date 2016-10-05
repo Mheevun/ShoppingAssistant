@@ -2,39 +2,35 @@ package com.mheev.helpthemshop.adapter;
 
 import android.databinding.DataBindingUtil;
 import android.databinding.ObservableArrayList;
+import android.databinding.ObservableBoolean;
 import android.databinding.ObservableList;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
-import com.mheev.helpthemshop.R;
-import com.mheev.helpthemshop.activity.OnEditItemListener;
 import com.mheev.helpthemshop.databinding.ShoppingItemBinding;
 import com.mheev.helpthemshop.model.DataRepository;
-import com.mheev.helpthemshop.model.ShoppingItemRepository;
 import com.mheev.helpthemshop.model.pojo.ShoppingItem;
 import com.mheev.helpthemshop.viewmodel.ItemViewModel;
-
-import java.util.List;
-
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
 
 /**
  * Created by mheev on 9/12/2016.
  */
 public class ItemAdapter extends RecyclerView.Adapter<ShoppingViewHodler>{
+    public static final String TAG = "ItemAdapter";
     private int itemLayout;
     private DataRepository repository;
-    public ObservableList<ShoppingItem> displayItems = new ObservableArrayList<ShoppingItem>();
-    private ItemViewModel itemViewModel;
+    public ObservableArrayList<ShoppingItem> displayItems;
 
-    public ItemAdapter(DataRepository repository, int itemLayout, ItemViewModel itemViewModel){
+    public ItemAdapter(DataRepository repository, int itemLayout){
         this.itemLayout = itemLayout;
         this.repository = repository;
-        this.itemViewModel = itemViewModel;
 
         //bind display with repository
+        Log.d(TAG, "bind displayItems with repository items");
         displayItems = repository.getItems();
+        displayItems.addOnListChangedCallback(callback);
     }
 
 
@@ -53,16 +49,17 @@ public class ItemAdapter extends RecyclerView.Adapter<ShoppingViewHodler>{
     @Override
     public void onBindViewHolder(ShoppingViewHodler holder, int position) {
         ShoppingItemBinding binding = holder.getBinding();
-        ShoppingItem item = repository.getItems().get(position);
-        itemViewModel.setItem(item);
+        ShoppingItem item = displayItems.get(position);
 
-        binding.setVm(itemViewModel);
+        Log.d(TAG, "bind item with viewModel; item name: "+item.getItemName());
+
+        binding.setVm(new ItemViewModel(item, repository));
         binding.executePendingBindings();
     }
 
     @Override
     public int getItemCount() {
-        return repository.getItems().size();
+        return displayItems.size();
     }
 
     public ObservableList<ShoppingItem> getDisplayItems() {
@@ -109,4 +106,32 @@ public class ItemAdapter extends RecyclerView.Adapter<ShoppingViewHodler>{
 //    public boolean isEmpty() {
 //        return items.isEmpty();
 //    }
+
+    ObservableList.OnListChangedCallback<ObservableList<Object>> callback = new ObservableList.OnListChangedCallback<ObservableList<Object>>() {
+        @Override
+        public void onChanged(ObservableList<Object> sender) {
+            notifyDataSetChanged();
+        }
+
+        @Override
+        public void onItemRangeChanged(ObservableList<Object> sender, int positionStart, int itemCount) {
+            notifyItemRangeChanged(positionStart, itemCount);
+        }
+
+        @Override
+        public void onItemRangeInserted(ObservableList<Object> sender, int positionStart, int itemCount) {
+            notifyItemRangeInserted(positionStart, itemCount);
+        }
+
+        @Override
+        public void onItemRangeMoved(ObservableList<Object> sender, int fromPosition, int toPosition, int itemCount) {
+            notifyItemRangeRemoved(fromPosition, itemCount);
+            notifyItemRangeInserted(toPosition, itemCount);
+        }
+
+        @Override
+        public void onItemRangeRemoved(ObservableList<Object> sender, int positionStart, int itemCount) {
+            notifyItemRangeRemoved(positionStart, itemCount);
+        }
+    };
 }

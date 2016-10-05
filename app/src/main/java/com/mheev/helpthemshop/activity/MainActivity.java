@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    private ItemManagmentFragment selectionFragment;
+    private ItemManagementFragment selectionFragment;
     private BuyingFragment buyingFragment;
     private ActivityMainBinding binding;
 
@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupViewPager(ViewPager viewPager) {
-        selectionFragment = new ItemManagmentFragment();
+        selectionFragment = new ItemManagementFragment();
         buyingFragment = new BuyingFragment();
 
         StateFragmentAdapter adapter = new StateFragmentAdapter(getSupportFragmentManager());

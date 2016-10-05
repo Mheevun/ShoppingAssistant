@@ -2,22 +2,20 @@ package com.mheev.helpthemshop.viewmodel;
 
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
-import android.databinding.ObservableBoolean;
+import android.util.Log;
 import android.view.View;
 
 import com.mheev.helpthemshop.BR;
-import com.mheev.helpthemshop.R;
 import com.mheev.helpthemshop.activity.EditItemHandler;
-import com.mheev.helpthemshop.activity.ItemManagmentFragment;
-import com.mheev.helpthemshop.activity.OnEditItemListener;
+import com.mheev.helpthemshop.activity.ItemManagementFragment;
 import com.mheev.helpthemshop.model.DataRepository;
-import com.mheev.helpthemshop.model.ShoppingItemRepository;
-import com.mheev.helpthemshop.activity.ItemDetailsActivity;
 import com.mheev.helpthemshop.model.pojo.Quantity;
 import com.mheev.helpthemshop.model.pojo.ShoppingItem;
 import com.mheev.helpthemshop.util.Navigator;
 
 import javax.inject.Inject;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * Created by mheev on 9/12/2016.
@@ -34,8 +32,9 @@ public class ItemViewModel extends BaseObservable{
 
     private DataRepository dataRepository;
 
-    public ItemViewModel(DataRepository dataRepository){
-        ItemManagmentFragment.getNetNavigatorComponent().inject(this);
+    public ItemViewModel(ShoppingItem item, DataRepository dataRepository){
+        ItemManagementFragment.getNetNavigatorComponent().inject(this);
+        this.item = item;
         this.dataRepository = dataRepository;
     }
 
@@ -63,7 +62,8 @@ public class ItemViewModel extends BaseObservable{
 
     public void onItemClick(View view){
         EditItemHandler handler = new EditItemHandler(dataRepository, navigator);
-        handler.handlerItemUpdate(view, new ShoppingItem());
+        Log.d(TAG, "item name click:"+item.getItemName());
+        handler.handlerItemUpdate(view, item);
     }
 
 }

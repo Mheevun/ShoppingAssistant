@@ -1,7 +1,6 @@
 package com.mheev.helpthemshop.activity;
 
 
-import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,29 +9,16 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.os.Bundle;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.util.Pair;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.mheev.helpthemshop.App;
 import com.mheev.helpthemshop.R;
 import com.mheev.helpthemshop.databinding.BuyingItemsBinding;
-import com.mheev.helpthemshop.db.UserItemDbHelper;
-import com.mheev.helpthemshop.model.eventbus.EditItemEvent;
-import com.mheev.helpthemshop.model.eventbus.ItemSelectedEvent;
-import com.mheev.helpthemshop.model.pojo.ShoppingItem;
 import com.mheev.helpthemshop.viewmodel.BuyingViewModel;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -47,8 +33,8 @@ public class BuyingFragment extends Fragment implements OnEditItemListener {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        ItemManagmentFragment.getNetNavigatorComponent().inject(this);
-        EventBus.getDefault().register(this);
+        ItemManagementFragment.getNetNavigatorComponent().inject(this);
+//        EventBus.getDefault().register(this);
 
 
         binding = DataBindingUtil.inflate(inflater, R.layout.buying_items, container, false);
@@ -60,27 +46,21 @@ public class BuyingFragment extends Fragment implements OnEditItemListener {
     }
 
 
-    @Subscribe
-    public void onRecieveSelectedItem(ItemSelectedEvent event){
-        viewModel.addItem(event.getItem());
-    }
 
-
-
-    @Override
-    public void onEditItemDetailsResult(ShoppingItem item) {
-        Log.d(getTag(), "on recieve edit item detail result (id): "+item.getId());
-        if(item.isNew())
-            viewModel.addItem(item);
-        else
-            viewModel.updateItem(item);
-    }
+//    @Override
+//    public void onEditItemDetailsResult(ShoppingItem item) {
+//        Log.d(getTag(), "on receive edit item detail result (id): "+item.getId());
+//        if(item.isNew())
+//            viewModel.addItem(item);
+//        else
+//            viewModel.updateItem(item);
+//    }
 
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        EventBus.getDefault().unregister(this);
+//        EventBus.getDefault().unregister(this);
     }
 
     private void initItemTouch(final RecyclerView recyclerView) {

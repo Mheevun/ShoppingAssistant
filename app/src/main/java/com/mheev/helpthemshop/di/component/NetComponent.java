@@ -1,8 +1,6 @@
 package com.mheev.helpthemshop.di.component;
 
-import com.mheev.helpthemshop.activity.BuyingFragment;
 import com.mheev.helpthemshop.activity.ItemDetailsActivity;
-import com.mheev.helpthemshop.activity.ItemManagmentFragment;
 import com.mheev.helpthemshop.model.ItemRequestManager;
 import com.mheev.helpthemshop.api.retrofit.ShoppingItemClient;
 import com.mheev.helpthemshop.di.module.AppModule;

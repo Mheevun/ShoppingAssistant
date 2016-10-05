@@ -16,43 +16,39 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-
 import com.mheev.helpthemshop.App;
 import com.mheev.helpthemshop.R;
-import com.mheev.helpthemshop.di.module.NavigatorModule;
 import com.mheev.helpthemshop.databinding.SelectItemsBinding;
 import com.mheev.helpthemshop.di.component.DaggerNetNavigatorItemComponent;
 import com.mheev.helpthemshop.di.component.NetNavigatorItemComponent;
 import com.mheev.helpthemshop.di.module.ItemModule;
-import com.mheev.helpthemshop.model.eventbus.ItemSelectedEvent;
-import com.mheev.helpthemshop.model.pojo.ShoppingItem;
-import com.mheev.helpthemshop.viewmodel.ItemManagmentViewModel;
-
-import org.greenrobot.eventbus.EventBus;
+import com.mheev.helpthemshop.di.module.NavigatorModule;
+import com.mheev.helpthemshop.viewmodel.ItemManagementViewModel;
 
 import javax.inject.Inject;
 
 /**
  * Created by mheev on 9/13/2016.
  */
-//public class ItemManagmentFragment extends Fragment implements OnEditItemListener, SwipeRefreshLayout.OnRefreshListener {
-public class ItemManagmentFragment extends BaseRxFragment implements SwipeRefreshLayout.OnRefreshListener {
+//public class ItemManagementFragment extends Fragment implements OnEditItemListener, SwipeRefreshLayout.OnRefreshListener {
+public class ItemManagementFragment extends BaseRxFragment implements SwipeRefreshLayout.OnRefreshListener {
     private final String TAG = getTag();
     private static NetNavigatorItemComponent netNavigatorItemComponent;
     private SelectItemsBinding binding;
 
     @Inject
-    ItemManagmentViewModel viewModel;
+    ItemManagementViewModel viewModel;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.d(TAG, "onCreated()");
+        Log.d(TAG, "onCreated() ItemManagementFragment");
         initDagger();
 
+        Log.d(TAG, "after init dagger");
         binding = DataBindingUtil.inflate(inflater, R.layout.select_items, container, false);
         View view = binding.getRoot();
+        Log.d(TAG, "viewModel: "+viewModel);
         binding.setViewModel(viewModel);
         binding.swipeContainer.setOnRefreshListener(this);
-
 
         return view;
     }
@@ -61,9 +57,7 @@ public class ItemManagmentFragment extends BaseRxFragment implements SwipeRefres
     @Override
     public void onRefresh() {
         binding.swipeContainer.setRefreshing(false);
-        viewModel.isLoadingItems.set(true);
-        binding.myRecyclerView.setVisibility(View.INVISIBLE);
-
+        viewModel.loadItems();
     }
 
     private void initDagger(){
@@ -74,12 +68,8 @@ public class ItemManagmentFragment extends BaseRxFragment implements SwipeRefres
                     .navigatorModule(new NavigatorModule(getActivity()))
                     .build();
         }
+        Log.d(TAG, "after create component");
         netNavigatorItemComponent.inject(this);
-
-//        viewModel.isLoadingItems.set(false);
-//        binding.myRecyclerView.setVisibility(View.VISIBLE);
-//        viewModel.initData(repository);
-
     }
 
     public static NetNavigatorItemComponent getNetNavigatorComponent() {
@@ -200,12 +190,9 @@ public class ItemManagmentFragment extends BaseRxFragment implements SwipeRefres
 //        }
 //    }
 
-    public void onSelectItem(ShoppingItem item) {
-        EventBus.getDefault().post(new ItemSelectedEvent(item));
-    }
 
 //    protected void onRecievedItemList(List<ShoppingItem> shoppingItemList) {
-//        ShoppingItemRepository repository = new ShoppingItemRepository(shoppingItemList);
+//        ItemRepository repository = new ItemRepository(shoppingItemList);
 //
 //        if (netNavigatorItemComponent == null) {
 //            ItemModule itemModule = new ItemModule(repository);
@@ -234,8 +221,7 @@ public class ItemManagmentFragment extends BaseRxFragment implements SwipeRefres
                 int position = viewHolder.getAdapterPosition();
 
                 if (direction == ItemTouchHelper.RIGHT) {
-                    ShoppingItem item = viewModel.moveItemToActivePlan(position);
-                    onSelectItem(item);
+                    viewModel.moveItemToBuying(position);
                 }
 //              else {
 //                    String id = viewModel.removeMemItem(position);

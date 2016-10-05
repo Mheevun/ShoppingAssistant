@@ -7,7 +7,7 @@
 
         <variable
             name="viewModel"
-            type="com.mheev.helpthemshop.viewmodel.ItemManagmentViewModel" />
+            type="com.mheev.helpthemshop.viewmodel.ItemManagementViewModel" />
 
         <import type="android.view.View" />
 
@@ -75,8 +75,10 @@
                     android:layout_height="match_parent"
                     android:clipToPadding="false"
                     android:scrollbars="vertical"
-                    app:adapter="@{viewModel.itemDisplayAdapter}"
+                    app:adapter="@{viewModel.ItemDisplayAdapter}"
+                    android:visibility="@{viewModel.isLoadingItems? View.GONE:View.VISIBLE}"
                     tools:listitem="@layout/shopping_item" />
+
             </android.support.v4.widget.SwipeRefreshLayout>
 
 

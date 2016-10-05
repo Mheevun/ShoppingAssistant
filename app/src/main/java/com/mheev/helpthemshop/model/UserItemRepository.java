@@ -1,6 +1,7 @@
 package com.mheev.helpthemshop.model;
 
 import android.databinding.ObservableArrayList;
+import android.databinding.ObservableBoolean;
 
 import com.mheev.helpthemshop.db.UserItemDbHelper;
 import com.mheev.helpthemshop.model.pojo.ShoppingItem;
@@ -12,6 +13,7 @@ import com.mheev.helpthemshop.util.ShoppingListUtils;
 
 public class UserItemRepository implements DataRepository {
     private UserItemDbHelper dbHelper;
+    private ObservableBoolean isLoading = new ObservableBoolean(true);
     private ObservableArrayList<ShoppingItem> items = new ObservableArrayList<>();
 
     public UserItemRepository(UserItemDbHelper dbHelper) {
@@ -36,7 +38,14 @@ public class UserItemRepository implements DataRepository {
 
     @Override
     public void loadItems() {
+        isLoading.set(true);
         items.addAll(dbHelper.getItems());
+        isLoading.set(false);
+    }
+
+    @Override
+    public ObservableBoolean getIsLoading() {
+        return isLoading;
     }
 
     /****need update list*****/
