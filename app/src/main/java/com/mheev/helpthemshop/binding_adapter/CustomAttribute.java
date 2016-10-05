@@ -7,7 +7,9 @@ import android.support.annotation.ColorRes;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.makeramen.roundedimageview.RoundedTransformationBuilder;
 import com.mheev.helpthemshop.R;
@@ -26,6 +28,11 @@ public class CustomAttribute {
 //        LinearLayoutManager layoutManager = new LinearLayoutManager(view.getContext());
         view.setLayoutManager(new GridLayoutManager(view.getContext(),2));
         view.setAdapter(adapter);
+    }
+
+    @BindingAdapter("onLongClick")
+    public static void onLongClick(RelativeLayout layout, View.OnLongClickListener listener){
+        layout.setOnLongClickListener(listener);
     }
 
 //    @BindingAdapter({"items", "itemLayout", "layoutManager"})

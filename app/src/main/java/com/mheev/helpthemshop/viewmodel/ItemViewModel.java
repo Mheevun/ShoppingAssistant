@@ -1,11 +1,10 @@
 package com.mheev.helpthemshop.viewmodel;
 
 import android.databinding.BaseObservable;
-import android.databinding.Bindable;
+import android.databinding.ObservableField;
 import android.util.Log;
 import android.view.View;
 
-import com.mheev.helpthemshop.BR;
 import com.mheev.helpthemshop.activity.EditItemHandler;
 import com.mheev.helpthemshop.activity.ItemManagementFragment;
 import com.mheev.helpthemshop.model.DataRepository;
@@ -26,6 +25,7 @@ public class ItemViewModel extends BaseObservable{
     @Inject
     Navigator navigator;
 
+    public ObservableField<String> avatarUrl = new ObservableField<>();
 
     private String SPACE = " ";
     private String LINE = "\n";
@@ -36,6 +36,7 @@ public class ItemViewModel extends BaseObservable{
         ItemManagementFragment.getNetNavigatorComponent().inject(this);
         this.item = item;
         this.dataRepository = dataRepository;
+        avatarUrl.set(item.getItemAvatarURL());
     }
 
     public void setItem(ShoppingItem item){
@@ -51,19 +52,12 @@ public class ItemViewModel extends BaseObservable{
         return summary;
     }
 
-    @Bindable
-    public String getAvatarUrl(){
-        return item.getItemAvatarURL();
-    }
-    public void setAvatarUrl(String url){
-        item.setItemAvatarURL(url);
-        notifyPropertyChanged(BR.avatarUrl);
-    }
-
-    public void onItemClick(View view){
+    public boolean onItemClick(View view){
         EditItemHandler handler = new EditItemHandler(dataRepository, navigator);
         Log.d(TAG, "item name click:"+item.getItemName());
         handler.handlerItemUpdate(view, item);
+
+        return true;
     }
 
 }
