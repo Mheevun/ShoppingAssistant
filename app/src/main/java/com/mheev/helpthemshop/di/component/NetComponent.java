@@ -3,8 +3,7 @@ package com.mheev.helpthemshop.di.component;
 import com.mheev.helpthemshop.activity.BuyingFragment;
 import com.mheev.helpthemshop.activity.ItemDetailsActivity;
 import com.mheev.helpthemshop.activity.ItemManagmentFragment;
-import com.mheev.helpthemshop.api.api_service.ItemRequestManager;
-import com.mheev.helpthemshop.api.api_service.UserItemRequestManager;
+import com.mheev.helpthemshop.model.ItemRequestManager;
 import com.mheev.helpthemshop.api.retrofit.ShoppingItemClient;
 import com.mheev.helpthemshop.di.module.AppModule;
 import com.mheev.helpthemshop.di.module.NetModule;
@@ -24,7 +23,5 @@ public interface NetComponent {
     ItemRequestManager requestManager();
     ShoppingItemClient client();
 
-    void inject(ItemManagmentFragment itemManagmentFragment);
-    void inject(BuyingFragment buyingFragment);
     void inject(ItemDetailsActivity detailsActivity);//image uploader (ShoppingItemClient)
 }

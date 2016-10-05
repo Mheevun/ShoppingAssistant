@@ -7,11 +7,15 @@ import android.view.View;
 
 import com.mheev.helpthemshop.BR;
 import com.mheev.helpthemshop.R;
+import com.mheev.helpthemshop.activity.EditItemHandler;
+import com.mheev.helpthemshop.activity.ItemManagmentFragment;
 import com.mheev.helpthemshop.activity.OnEditItemListener;
+import com.mheev.helpthemshop.model.DataRepository;
 import com.mheev.helpthemshop.model.ShoppingItemRepository;
 import com.mheev.helpthemshop.activity.ItemDetailsActivity;
 import com.mheev.helpthemshop.model.pojo.Quantity;
 import com.mheev.helpthemshop.model.pojo.ShoppingItem;
+import com.mheev.helpthemshop.util.Navigator;
 
 import javax.inject.Inject;
 
@@ -22,20 +26,21 @@ public class ItemViewModel extends BaseObservable{
     private ShoppingItem item;
 
     @Inject
-    ShoppingItemRepository repo;
+    Navigator navigator;
+
 
     private String SPACE = " ";
     private String LINE = "\n";
 
-    private Class<?> detailsActivity = ItemDetailsActivity.class;
+    private DataRepository dataRepository;
 
-    public ObservableBoolean isSync = new ObservableBoolean();
-    private OnEditItemListener listener;
+    public ItemViewModel(DataRepository dataRepository){
+        ItemManagmentFragment.getNetNavigatorComponent().inject(this);
+        this.dataRepository = dataRepository;
+    }
 
-    public ItemViewModel(ShoppingItem item, OnEditItemListener listener){
+    public void setItem(ShoppingItem item){
         this.item = item;
-        this.listener = listener;
-//        App.getItemComponent().inject(this);
     }
 
     public String getItemSummary(){
@@ -57,23 +62,8 @@ public class ItemViewModel extends BaseObservable{
     }
 
     public void onItemClick(View view){
-        listener.onEditItemDetails(item, view.findViewById(R.id.avatar));
-//        Intent intent = ItemDetailsActivity.getStartIntent(view.getContext(),item);
-//        ActivityOptionsCompat transitionOption = getDetailTransitionOption(view);
-//        ActivityCompat.startActivity((Activity) view.getContext(), intent,transitionOption.toBundle());
+        EditItemHandler handler = new EditItemHandler(dataRepository, navigator);
+        handler.handlerItemUpdate(view, new ShoppingItem());
     }
-
-    public void onDeleteClick(){
-        listener.onDeleteItem(item);
-    }
-
-//    private ActivityOptionsCompat getDetailTransitionOption(View view){
-//        Context context = view.getContext();
-//        return ActivityOptionsCompat.makeSceneTransitionAnimation(
-//                (Activity) view.getContext(),
-//                new Pair<View, String>(view.findViewById(R.id.avatar),context.getString(R.string.transition_avatar))
-////                new Pair<View, String>(view.findViewById(R.id.item_name),context.getString(R.string.transition_name))
-//        );
-//    }
 
 }

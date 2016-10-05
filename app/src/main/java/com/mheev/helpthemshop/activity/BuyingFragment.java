@@ -34,22 +34,23 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 /**
  * Created by mheev on 9/15/2016.
  */
 public class BuyingFragment extends Fragment implements OnEditItemListener {
+    @Inject
+    BuyingViewModel viewModel;
 
-    private BuyingViewModel viewModel;
     private BuyingItemsBinding binding;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        App.getNetComponent().inject(this);
+        ItemManagmentFragment.getNetNavigatorComponent().inject(this);
         EventBus.getDefault().register(this);
 
-//        setRequestManager(userRequestManager);
 
-        viewModel = new BuyingViewModel(this, new UserItemDbHelper(this.getContext()));
         binding = DataBindingUtil.inflate(inflater, R.layout.buying_items, container, false);
         View view = binding.getRoot();
         binding.setViewModel(viewModel);
@@ -65,20 +66,6 @@ public class BuyingFragment extends Fragment implements OnEditItemListener {
     }
 
 
-    public void onEditItemDetails(ShoppingItem item, View view) {
-        Log.d("BuyingFragment", "create intent: " + item);
-        Intent intent = new Intent(getContext(), ItemDetailsActivity.class);
-        EventBus.getDefault().postSticky(new EditItemEvent(item, this));
-        startActivity(intent, getTransitionOption(view).toBundle());
-    }
-    private ActivityOptionsCompat getTransitionOption(View view) {
-        return ActivityOptionsCompat.makeSceneTransitionAnimation(
-                getActivity(),
-                new Pair<View, String>(view, this.getString(R.string.transition_avatar))
-//                new Pair<View, String>(view.findViewById(R.id.item_name),context.getString(R.string.transition_name))
-        );
-    }
-
 
     @Override
     public void onEditItemDetailsResult(ShoppingItem item) {
@@ -87,11 +74,6 @@ public class BuyingFragment extends Fragment implements OnEditItemListener {
             viewModel.addItem(item);
         else
             viewModel.updateItem(item);
-    }
-
-    @Override
-    public void onDeleteItem(ShoppingItem item) {
-        viewModel.removeItem(item.position);
     }
 
 

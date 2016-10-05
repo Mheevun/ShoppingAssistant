@@ -1,6 +1,6 @@
 package com.mheev.helpthemshop.model.eventbus;
 
-import com.mheev.helpthemshop.activity.OnEditItemListener;
+import com.mheev.helpthemshop.activity.ItemDetailsResultListener;
 import com.mheev.helpthemshop.model.pojo.ShoppingItem;
 
 /**
@@ -8,31 +8,13 @@ import com.mheev.helpthemshop.model.pojo.ShoppingItem;
  */
 
 public class EditItemEvent extends ItemEvent {
-    private OnEditItemListener listener;
-    private boolean deleteFlag = false;
-
-
-
-
-    public EditItemEvent(ShoppingItem item, OnEditItemListener listener) {
+    private ItemDetailsResultListener listener;
+    public EditItemEvent(ShoppingItem item, ItemDetailsResultListener listener) {
         super(item);
         this.listener = listener;
     }
 
-    public void onEditItemCallback(ShoppingItem item){
-        listener.onEditItemDetailsResult(item);
+    public ItemDetailsResultListener getListener() {
+        return listener;
     }
-
-    public void onDeleteCallback(ShoppingItem item){
-        listener.onDeleteItem(item);
-    }
-
-    public void setDeleteFlag(boolean deleteFlag) {
-        this.deleteFlag = deleteFlag;
-    }
-
-    public boolean getDeleteFlag() {
-        return deleteFlag;
-    }
-
 }

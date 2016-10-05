@@ -5,10 +5,8 @@ import android.app.Application;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.mheev.helpthemshop.api.api_service.ItemRequestManager;
-import com.mheev.helpthemshop.api.api_service.UserItemRequestManager;
+import com.mheev.helpthemshop.model.ItemRequestManager;
 import com.mheev.helpthemshop.api.retrofit.ShoppingItemClient;
-import com.mheev.helpthemshop.util.ItemScope;
 
 import java.io.IOException;
 

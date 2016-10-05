@@ -1,5 +1,8 @@
 package com.mheev.helpthemshop.model;
 
+import android.util.Log;
+import android.widget.Toast;
+
 import com.mheev.helpthemshop.api.api_service.RequestManager;
 import com.mheev.helpthemshop.api.retrofit.ShoppingItemClient;
 import com.mheev.helpthemshop.model.api.ApiCreateResponse;
@@ -10,6 +13,8 @@ import java.util.List;
 
 import okhttp3.ResponseBody;
 import rx.Observable;
+import rx.Observer;
+import rx.Subscription;
 
 
 /**
@@ -22,6 +27,8 @@ public class ItemRequestManager extends RequestManager {
         super(client);
         this.client = client;
     }
+
+
 
     public Observable<List<ShoppingItem>> loadItemList() {
         return getRequester(client.getItemList())
@@ -53,7 +60,7 @@ public class ItemRequestManager extends RequestManager {
 //            createItem(item).subscribe(new CreateItemHandler());
 //        } else {
 //            Log.d(TAG, "perform update item request: " + item.getItemName());
-//            updateItem(item).subscribe(new UpdateItemHandler());
+//            updateItemInMem(item).subscribe(new UpdateItemHandler());
 //        }
 //
 //    }

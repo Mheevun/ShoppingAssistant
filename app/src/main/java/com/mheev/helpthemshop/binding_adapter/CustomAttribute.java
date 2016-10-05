@@ -3,10 +3,12 @@ package com.mheev.helpthemshop.binding_adapter;
 import android.databinding.BindingAdapter;
 import android.databinding.BindingConversion;
 import android.databinding.ObservableArrayList;
+import android.databinding.ObservableList;
 import android.graphics.Color;
 import android.support.annotation.ColorRes;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Layout;
 import android.util.Log;
 import android.widget.ImageView;
 
@@ -19,16 +21,25 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 
+import java.util.List;
+
 /**
  * Created by mheev on 9/14/2016.
  */
 public class CustomAttribute {
-    @BindingAdapter("adapter")
-    public static void bindList(RecyclerView view, RecyclerView.Adapter adapter) {
-        LinearLayoutManager layoutManager = new LinearLayoutManager(view.getContext());
+    @BindingAdapter({"adapter","itemLayout"})
+    public static void bindList(RecyclerView view, RecyclerView.Adapter adapter, RecyclerView.LayoutManager layoutManager) {
+//        LinearLayoutManager layoutManager = new LinearLayoutManager(view.getContext());
         view.setLayoutManager(layoutManager);
         view.setAdapter(adapter);
     }
+
+//    @BindingAdapter({"items", "itemLayout", "layoutManager"})
+//    public static void bindChild(RecyclerView view, ObservableList list, int item, RecyclerView.LayoutManager layoutManager){
+////        LinearLayoutManager layoutManager = new LinearLayoutManager(view.getContext());
+//        view.setLayoutManager(layoutManager);
+//        view.setAdapter(new ItemAdapter(list, item));
+//    }
 
     @BindingConversion
     public static @ColorRes int convertStringToColor(ColorEnum value){

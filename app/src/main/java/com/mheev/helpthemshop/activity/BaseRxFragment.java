@@ -29,8 +29,8 @@ public abstract class BaseRxFragment extends Fragment{
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
         subscriptions.unsubscribe();
+        super.onDestroy();
     }
 
 }

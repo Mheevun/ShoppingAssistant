@@ -5,4 +5,6 @@ package com.mheev.helpthemshop.adapter;
  */
 
 public class ItemView {
+    private int layout;
+    private Object viewModel;
 }
