@@ -1,7 +1,6 @@
-package com.mheev.helpthemshop.api.api_service;
+package com.mheev.helpthemshop.model;
 
-import android.util.Log;
-
+import com.mheev.helpthemshop.api.api_service.RequestManager;
 import com.mheev.helpthemshop.api.retrofit.ShoppingItemClient;
 import com.mheev.helpthemshop.model.api.ApiCreateResponse;
 import com.mheev.helpthemshop.model.api.ApiEditResponse;
@@ -9,20 +8,14 @@ import com.mheev.helpthemshop.model.pojo.ShoppingItem;
 
 import java.util.List;
 
-import okhttp3.Response;
 import okhttp3.ResponseBody;
 import rx.Observable;
-import rx.Observer;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
 
 
 /**
  * Created by mheev on 9/19/2016.
  */
-public class ItemRequestManager extends RequestManager{
+public class ItemRequestManager extends RequestManager {
     private final String TAG = ItemRequestManager.class.getSimpleName();
 
     public ItemRequestManager(ShoppingItemClient client) {
