@@ -34,8 +34,6 @@ public class BuyingFragment extends Fragment implements OnEditItemListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ItemManagementFragment.getNetNavigatorComponent().inject(this);
-//        EventBus.getDefault().register(this);
-
 
         binding = DataBindingUtil.inflate(inflater, R.layout.buying_items, container, false);
         View view = binding.getRoot();
@@ -45,23 +43,6 @@ public class BuyingFragment extends Fragment implements OnEditItemListener {
         return view;
     }
 
-
-
-//    @Override
-//    public void onEditItemDetailsResult(ShoppingItem item) {
-//        Log.d(getTag(), "on receive edit item detail result (id): "+item.getId());
-//        if(item.isNew())
-//            viewModel.addItem(item);
-//        else
-//            viewModel.updateItem(item);
-//    }
-
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-//        EventBus.getDefault().unregister(this);
-    }
 
     private void initItemTouch(final RecyclerView recyclerView) {
 

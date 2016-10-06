@@ -3,6 +3,7 @@ package com.mheev.helpthemshop.binding_adapter;
 import android.databinding.BindingAdapter;
 import android.databinding.BindingConversion;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.support.annotation.ColorRes;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -34,6 +35,7 @@ public class CustomAttribute {
     public static void onLongClick(RelativeLayout layout, View.OnLongClickListener listener){
         layout.setOnLongClickListener(listener);
     }
+
 
 //    @BindingAdapter({"items", "itemLayout", "layoutManager"})
 //    public static void bindChild(RecyclerView view, ObservableList list, int item, RecyclerView.LayoutManager layoutManager){
@@ -89,18 +91,18 @@ public class CustomAttribute {
         // make call to the initial loading event
         Log.d("CustomAttribute", "imageUrl:"+url);
 
-        Transformation transformation = new RoundedTransformationBuilder()
-                .borderColor(Color.WHITE)
-                .borderWidthDp(3)
-                .cornerRadiusDp(60)
-                .oval(false)
-                .build();
+//        Transformation transformation = new RoundedTransformationBuilder()
+//                .borderColor(Color.WHITE)
+//                .borderWidthDp(3)
+//                .cornerRadiusDp(60)
+//                .oval(false)
+//                .build();
 
         Picasso.with(imageView.getContext())
                 .load(url)
 //                .resize(100,100)
                 .fit()
-                .transform(transformation)
+//                .transform(transformation)
                 .placeholder(imageView.getDrawable())
                 .into(imageView);
     }

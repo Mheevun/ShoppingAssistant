@@ -15,9 +15,6 @@
 
     <android.support.v7.widget.CardView
         android:id="@+id/card_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
         android:layout_gravity="center"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
@@ -25,9 +22,11 @@
         android:clickable="true"
         android:foreground="?attr/selectableItemBackground"
         app:cardCornerRadius="2dp"
-        app:contentPadding="10dp"
-        >
+        app:contentPadding="5dp"
+        android:layout_width="150dp"
+        android:layout_height="200dp">
 
+        <!--app:contentPadding="10dp"-->
 
 
             <!--<View-->
@@ -52,42 +51,69 @@
                 <!--app:imgUrl="@{vm.avatarUrl}"-->
                 <!--/>-->
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:paddingLeft="15dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentStart="true"
-                app:onLongClick="@{(v) -> vm.onItemClick(v)}"
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_alignParentTop="true"
+            app:onLongClick="@{(v) -> vm.onItemClick(v)}"
+            >
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="vertical"
                 >
                 <ImageView
                     android:id="@+id/avatar"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerVertical="true"
-                    app:imgUrl="@{vm.avatarUrl}"
-                    android:background="@drawable/circle"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.97"
                     android:transitionName="@string/transition_avatar"
-                    app:backgroundTint="@color/colorAccent"
-                    app:borderWidth="0dp"
-                    app:elevation="6dp"
-                    app:pressedTranslationZ="12dp"
+                    android:background="@color/primary"
+                    android:contentDescription="@string/wallpaper_of_item"
+                    app:imgUrl="@{vm.avatarUrl}"
                     />
 
                 <TextView
                     android:id="@+id/item_summary"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_toRightOf="@id/avatar"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="15dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.5"
                     android:text="@{vm.itemSummary}"
                     android:textAppearance="?attr/textAppearanceListItem"
-                    android:textSize="@dimen/article_subheading" />
+                    android:textSize="@dimen/article_subheading"
+                    />
 
-            </RelativeLayout>
+            </LinearLayout>
+
+
+            <!--<ImageView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--app:srcCompat="@drawable/circle"-->
+                <!--android:layout_marginEnd="14dp"-->
+                <!--android:id="@+id/imageView"-->
+                <!--android:contentDescription="@string/circle"-->
+                <!--android:layout_marginBottom="68dp"-->
+                <!--android:layout_alignParentBottom="true"-->
+                <!--android:layout_alignParentEnd="true" />-->
+
+
+            <com.mikhaellopez.circularimageview.CircularImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginEnd="13dp"
+                android:src="@drawable/ic_add_shopping_cart_white_24dp"
+                app:civ_border="true"
+                app:civ_border_color="#3f51b5"
+                app:civ_border_width="8dp"
+                app:civ_shadow="true"
+                app:civ_shadow_color="#3f51b5"
+                app:civ_shadow_radius="10"
+                android:layout_marginBottom="48dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true" />
+        </RelativeLayout>
 
     </android.support.v7.widget.CardView>
 

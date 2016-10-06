@@ -77,7 +77,10 @@
                     android:scrollbars="vertical"
                     app:adapter="@{viewModel.ItemDisplayAdapter}"
                     android:visibility="@{viewModel.isLoadingItems? View.GONE:View.VISIBLE}"
-                    tools:listitem="@layout/shopping_item" />
+                    tools:listitem="@layout/shopping_item"
+                    app:layoutManager="GridLayoutManager"
+                    app:spanCount="2"
+                    />
 
             </android.support.v4.widget.SwipeRefreshLayout>
 

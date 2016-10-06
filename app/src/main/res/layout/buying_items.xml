@@ -25,7 +25,6 @@
                 android:layout_weight="1"
                 android:scrollbars="vertical"
                 app:adapter="@{viewModel.itemAdapter}" />
-            <!--app:displayItems = "@{viewModel.displayItems}"-->
 
 
         </RelativeLayout>

@@ -41,5 +41,7 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="price_element">Price Element</string>
     <string name="price_value">Price Value</string>
     <string name="quantity_value">Quantity Value</string>
+    <string name="wallpaper_of_item">wallpaper of item</string>
+    <string name="circle">circle</string>
 
 </resources>
