@@ -9,6 +9,7 @@ import android.view.View;
 import com.mheev.helpthemshop.R;
 import com.mheev.helpthemshop.activity.ItemDetailsActivity;
 import com.mheev.helpthemshop.activity.ItemDetailsResultListener;
+import com.mheev.helpthemshop.activity.StoreActivity;
 import com.mheev.helpthemshop.model.eventbus.DetailActivityResultType;
 import com.mheev.helpthemshop.model.eventbus.EditItemEvent;
 import com.mheev.helpthemshop.model.eventbus.EditItemEventResult;
@@ -56,13 +57,16 @@ public class Navigator {
 
         return obsItemEventResult;
     }
-
     private ActivityOptionsCompat getTransitionOption(View view) {
         return ActivityOptionsCompat.makeSceneTransitionAnimation(
                 currentActivity,
                 new Pair<View, String>(view, currentActivity.getString(R.string.transition_avatar))
 //                new Pair<View, String>(view.findViewById(R.id.item_name),context.getString(R.string.transition_name))
         );
+    }
+
+    public void toStoreActivity(){
+        currentActivity.startActivity(new Intent(currentActivity, StoreActivity.class));
     }
 
 

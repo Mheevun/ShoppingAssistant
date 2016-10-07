@@ -103,5 +103,9 @@ dependencies {
     compile 'com.makeramen:roundedimageview:2.2.1'
 
     compile 'com.mikhaellopez:circularimageview:3.0.2'
+
+    compile 'com.mikepenz:actionitembadge:3.3.0@aar'
+    compile 'com.mikepenz:iconics-core:2.8.0@aar'
+
 }
 

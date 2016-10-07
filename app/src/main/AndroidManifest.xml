@@ -22,14 +22,9 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.ItemDetailActivity_deprecate"
-            android:label="@string/title_activity_details"
-            android:parentActivityName=".activity.MainActivity"
-            android:windowSoftInputMode="stateHidden"
+            android:name=".activity.StoreActivity"
+            android:label="@string/store"
             >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.mheev.helpthemshop.activity.MainActivity" />
         </activity>
         <activity
             android:name=".activity.ItemDetailsActivity"

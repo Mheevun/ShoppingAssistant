@@ -17,4 +17,6 @@
     <color name="gray">#bdbdbd</color>
     <color name="white">#ffffff</color>
     <color name="shadow">#000000</color>
+
+    <color name="notifiaction">#ff0000</color>
 </resources>

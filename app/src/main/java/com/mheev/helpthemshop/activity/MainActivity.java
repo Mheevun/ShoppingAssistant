@@ -30,10 +30,15 @@ public class MainActivity extends AppCompatActivity {
 
         //adding toolbar to mainscreen
         setSupportActionBar(binding.toolbar);
+        NavigationDrawer navigationDrawer = new NavigationDrawer(this, binding.toolbar);
+        navigationDrawer.initNavigationDrawer();
 
         ViewPager viewPager = binding.viewpager;
         setupViewPager(viewPager);
         binding.tabs.setupWithViewPager(viewPager);
+
+
+
 
     }
 

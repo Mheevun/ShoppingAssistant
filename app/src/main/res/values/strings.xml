@@ -44,4 +44,9 @@ Praesent tincidunt lorem sit amet mi consequat cursus. Interdum et malesuada fam
     <string name="wallpaper_of_item">wallpaper of item</string>
     <string name="circle">circle</string>
 
+
+    <string name="drawer_open">Open</string>
+    <string name="drawer_close">Close</string>
+    <string name="store">Store</string>
+    <string name="hint_search">search a shopping item</string>
 </resources>
